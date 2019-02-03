@@ -1,0 +1,4 @@
+*.o
+ft_ssl
+._*
+libft.a
