@@ -2,6 +2,8 @@
 #define _SSL_
 
 #include "../libft/libft.h"
+#include "md5.h"
+#include "sha256.h"
 #include "./dispatch.h"
 #include <inttypes.h>
 
@@ -16,8 +18,5 @@ typedef struct  s_container
     uint8_t     flags;
     char        *plain_text;
 }               t_container;
-
-//int             md5(t_container ssl);
-//int             sha256(t_container ssl);
 
 #endif
