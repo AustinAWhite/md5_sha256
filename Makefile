@@ -2,9 +2,9 @@ NAME	=	ft_ssl
 #CFLAGS	=	-Wall -Werror -Wextra
 FILES	=	ssl parse_input
 SRC		=	$(FILES:%=src/%.c)
-OBJ		=	$(FILES:%=obj/%.o)
+OBJ		=	$(SRC:%.c=%.o)
 
-all: $(NAME) clean fclean re
+all: $(NAME) clean fclean
 .PHONY : all
 
 $(NAME) : $(OBJ)

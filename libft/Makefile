@@ -37,7 +37,7 @@ clean:
 	@/bin/rm -f $(OBJ)
 
 fclean:
-	@echo "Removing $(NAME)"
+	@echo "Removing $(NAME)..."
 	@/bin/rm -f $(NAME) $(OBJ)
 
 re: fclean all
