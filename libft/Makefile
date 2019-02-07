@@ -16,14 +16,14 @@ SRC		= ft_isdigit.c ft_strchr.c ft_strcpy.c ft_strlen.c ft_tolower.c \
 		  ft_strtrim.c ft_strsplit.c ft_itoa.c ft_lstnew.c ft_lstdelone.c \
 		  ft_lstdel.c ft_lstadd.c ft_lstiter.c ft_lstmap.c ft_locate_lfeed.c \
 		  get_next_line.c ft_locate_lfeed.c ft_strtok_mod.c ft_strdelims.c\
-		  ft_strarrlen.c ft_stack.c
+		  ft_strarrlen.c ft_stack.c ft_chrindex.c ft_lstappend.c
 
 OBJ		= $(SRC:%.c=%.o)
 
 all : $(NAME)
 
 $(NAME):
-	@echo "Compiling $(NAME)"
+	@echo "Compiling $(NAME)..."
 	@gcc -c $(CFLAGS) $(SRC) -I $(HEADER) \
 	&& ar rc libft.a $(OBJ) && ranlib $(NAME)
 

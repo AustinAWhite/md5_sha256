@@ -29,7 +29,6 @@ typedef struct		s_list
 void				*ft_memset(void *b, int c, size_t len);
 void				ft_bzero(void *s, size_t n);
 void				*ft_memcpy(void *dst, const void *src, size_t n);
-void				*ft_memcpy(void *dst, const void *src, size_t n);
 void				*ft_memccpy(void *dst, const void *src, int c, size_t n);
 void				*ft_memmove(void *dst, const void *src, size_t len);
 void				*ft_memchr(const void *s, int c, size_t n);
@@ -94,5 +93,7 @@ int					ft_locate_lfeed(const char *str);
 int					ft_strdelims(char *str, char *delims);
 char				**ft_strtok_mod(char *s, char *delims);
 int					ft_strarrlen(char **str);
+int					ft_chrindex(char *str, char c);
+void    			ft_lstappend(t_list **blst, t_list *newelem);
 
 #endif
