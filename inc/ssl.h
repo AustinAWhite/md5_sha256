@@ -15,6 +15,7 @@
 #define IS_STR 0x10
 #define IS_FILE 0x20
 #define FLAGSTR "pqrs"
+#define READ_BUF_SIZE 1024
 
 static unsigned int flag_list[] = {
     FLG_P, FLG_Q, FLG_R, FLG_S,
