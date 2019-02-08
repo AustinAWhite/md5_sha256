@@ -30,7 +30,7 @@ typedef struct          s_container
 
 void                    invalid_alg(char *alg);
 void                    no_algotithm();
-void                    invalid_flag(char *hash_alg, char c);
+void                    invalid_flag(char *hash_alg, char c, uint8_t flags);
 void                    arg_required(char *hash_alg, char c);
 
 t_container             parse_input(int ac, char **av);
