@@ -36,14 +36,15 @@ void        arg_required(char *hash_alg, char c)
     exit(EXIT_FAILURE);
 }
 
-void        invalid_flag(char *hash_alg, char c)
+void        invalid_flag(char *hash_alg, char c, uint8_t flags)
 {
     ft_putstr_fd(hash_alg, STDERR_FILENO);
     ft_putstr_fd(": illegal option -- ", STDERR_FILENO);
     ft_putchar_fd(c, STDERR_FILENO);
     ft_putendl_fd("", STDERR_FILENO);
     print_usage(hash_alg);
-    exit(EXIT_FAILURE);
+    if (!(flags & FLG_P))
+        exit(EXIT_FAILURE);
 }
 
 void        no_algotithm()
