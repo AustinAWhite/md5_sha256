@@ -52,17 +52,5 @@ int main(int ac, char **av)
     contain = parse_input(ac, av);
     if (contain.message == NULL || contain.flags & FLG_P)
         read_stdin(&contain.message);
-    printf("hash_alg: %s\n", contain.hash_alg);
-    printf("flags:    %04d\n          srqp\n", ft_atoi(itoa_base(contain.flags, 2)));
-
-    t_list *tmp = contain.message;
-    while (tmp)
-    {
-        if (tmp->content_size & IS_STR)
-            printf("string:   %s\n", tmp->content);
-        if (tmp->content_size & IS_FILE)
-            printf("file:     %s\n", tmp->content);
-        tmp = tmp->next;
-    }
     return (0);
 }
