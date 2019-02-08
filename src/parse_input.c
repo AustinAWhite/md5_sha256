@@ -54,8 +54,15 @@ t_container parse_input(int ac, char **av)
             contain.hash_alg = av[1];
     contain.hash_alg && av[1] ? NULL : invalid_alg(av[1]);
     while (av[++i] && av[i][0] == '-' && !(contain.flags & FLG_S))
-        if (set_flags(&contain, av[i], av[i + 1]))
+    {
+        if (ft_strequ(av[i], "--"))
+        {
+            i++;
+            break ;
+        }
+        else if (set_flags(&contain, av[i], av[i + 1]))
             return (contain);
+    }
     if (contain.message && ft_strequ(av[i], contain.message->content))
         i++;
     for ( ; i < ac ; i++)
