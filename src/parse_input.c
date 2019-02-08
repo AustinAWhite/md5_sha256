@@ -1,6 +1,15 @@
 #include "../inc/ssl.h"
 
-static void         set_flags(t_container *contain, char *arg, char *next)
+static void append_message(t_list **list, char *message, unsigned int type)
+{
+    t_list *new_message;
+
+    new_message = ft_lstnew(message, ft_strlen(message));
+    new_message->content_size = type;
+    ft_lstappend(list, new_message);
+}
+
+static void set_flags(t_container *contain, char *arg, char *next)
 {
     int i;
     int found;
@@ -19,15 +28,13 @@ static void         set_flags(t_container *contain, char *arg, char *next)
             contain->flags |= FLG_S;
             str = ft_isprint(arg[i + 1]) ? (arg + i + 1) : (next);
             str ? NULL : arg_required(contain->hash_alg, arg[i]);
-            message = ft_lstnew(str, ft_strlen(str));
-            message->content_size = IS_STR;
-            ft_lstappend(&contain->message, message);
+            append_message(&contain->message, str, IS_STR);
             break ;
         }
     }
 }
 
-t_container         parse_input(int ac, char **av)
+t_container parse_input(int ac, char **av)
 {
     int j;
     int i;
@@ -47,10 +54,6 @@ t_container         parse_input(int ac, char **av)
     if (contain.message && ft_strequ(av[i], contain.message->content))
         i++;
     for ( ; i < ac ; i++)
-    {
-        file = ft_lstnew(av[i], ft_strlen(av[i]));
-        file->content_size = IS_FILE;
-        ft_lstappend(&contain.message, file);
-    }
+        append_message(&contain.message, av[i], IS_FILE);
     return (contain);
 }
