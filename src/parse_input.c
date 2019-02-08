@@ -9,7 +9,7 @@ static void append_message(t_list **list, char *message, unsigned int type)
     ft_lstappend(list, new_message);
 }
 
-static void set_flags(t_container *contain, char *arg, char *next)
+static int set_flags(t_container *contain, char *arg, char *next)
 {
     int i;
     int found;
@@ -22,7 +22,10 @@ static void set_flags(t_container *contain, char *arg, char *next)
         if ((found = ft_chrindex(FLAGSTR, arg[i])) != -1)
             contain->flags |= flag_list[found];
         else
-            invalid_flag(contain->hash_alg, arg[i]);
+        {
+            invalid_flag(contain->hash_alg, arg[i], contain->flags);
+            return (1);
+        }
         if (contain->flags & FLG_S)
         {
             contain->flags |= FLG_S;
@@ -32,6 +35,7 @@ static void set_flags(t_container *contain, char *arg, char *next)
             break ;
         }
     }
+    return (0);
 }
 
 t_container parse_input(int ac, char **av)
@@ -50,7 +54,8 @@ t_container parse_input(int ac, char **av)
             contain.hash_alg = av[1];
     contain.hash_alg && av[1] ? NULL : invalid_alg(av[1]);
     while (av[++i] && av[i][0] == '-' && !(contain.flags & FLG_S))
-        set_flags(&contain, av[i], av[i + 1]);
+        if (set_flags(&contain, av[i], av[i + 1]))
+            return (contain);
     if (contain.message && ft_strequ(av[i], contain.message->content))
         i++;
     for ( ; i < ac ; i++)
