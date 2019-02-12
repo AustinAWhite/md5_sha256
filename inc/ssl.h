@@ -2,6 +2,7 @@
 #define _SSL_
 
 #include "../libft/libft.h"
+#include "./global.h"
 #include "./md5.h"
 #include "./sha256.h"
 #include "./dispatch.h"
@@ -20,13 +21,6 @@
 static unsigned int flag_list[] = {
     FLG_P, FLG_Q, FLG_R, FLG_S,
 };
-
-typedef struct          s_container
-{
-    char                *hash_alg;
-    uint8_t             flags;
-    t_list              *message;
-}                       t_container;
 
 void                    invalid_alg(char *alg);
 void                    no_algotithm();
