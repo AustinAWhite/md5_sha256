@@ -3,7 +3,6 @@
 
 #include "./ssl.h"
 
-/* constants */
 #define S11 7
 #define S12 12
 #define S13 17
@@ -21,52 +20,35 @@
 #define S43 15
 #define S44 21
 
-/* defines a generic pointer type */
-typedef unsigned char *POINTER;
-/* defines a 2 byte word */
-typedef unsigned short int UINT2;
-/* defines a 4 byte word */
-typedef unsigned long int UINT4;
+typedef unsigned int MD5_u32plus;
 
-typedef struct      md5_context
-{
-    UINT4           state[4];
-    UINT4           count[2];
-    unsigned char   block[64]; 
-}                   md5_context;        
+typedef struct {
+    MD5_u32plus state[4];
+    MD5_u32plus count[2];
+    unsigned char buffer[64];
+    MD5_u32plus block[16];
+} MD5_CTX;
 
-/* rotate x left by n bits */
-#define ROTATE_LEFT(x, n) (((x) << (n)) | ((x) >> (32-(n))))
+#define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
+#define GET(n) SET(n)
 
-/* basic logical operations */
-#define F(x, y, z) (((x) & (y)) | ((~x) & (z)))
-#define G(x, y, z) (((x) & (z)) | ((y) & (~z)))
-#define H(x, y, z) ((x) ^ (y) ^ (z))
-#define I(x, y, z) ((y) ^ ((x) | (~z)))
+#define F(x, y, z)		((z) ^ ((x) & ((y) ^ (z))))
+#define G(x, y, z)		((y) ^ ((z) & ((x) ^ (y))))
+#define H(x, y, z)		(((x) ^ (y)) ^ (z))
+#define H2(x, y, z)		((x) ^ ((y) ^ (z)))
+#define I(x, y, z)		((y) ^ ((x) | ~(z)))
 
-/* transormations for rounds 1, 2, 3, and 4 */
-#define FF(a, b, c, d, x, s, ac) { \
-            (a) += F ((b), (c), (d)) + (x) + (UINT4)(ac); \
-            (a) = ROTATE_LEFT ((a), (s)); \
-            (a) += (b); \
-        }
-#define GG(a, b, c, d, x, s, ac) { \
-            (a) += G ((b), (c), (d)) + (x) + (UINT4)(ac); \
-            (a) = ROTATE_LEFT ((a), (s)); \
-            (a) += (b); \
-        }
-#define HH(a, b, c, d, x, s, ac) { \
-            (a) += H ((b), (c), (d)) + (x) + (UINT4)(ac); \
-            (a) = ROTATE_LEFT ((a), (s)); \
-            (a) += (b); \
-        }
-#define II(a, b, c, d, x, s, ac) { \
-            (a) += I ((b), (c), (d)) + (x) + (UINT4)(ac); \
-            (a) = ROTATE_LEFT ((a), (s)); \
-            (a) += (b); \
-        }
+#define STEP(f, a, b, c, d, x, t, s) \
+	(a) += f((b), (c), (d)) + (x) + (t); \
+	(a) = (((a) << (s)) | (((a) & 0xffffffff) >> (32 - (s)))); \
+	(a) += (b);
 
-/* pre-computed table of shift constants */
+#define OUT(dst, src) \
+	(dst)[0] = (unsigned char)(src); \
+	(dst)[1] = (unsigned char)((src) >> 8); \
+	(dst)[2] = (unsigned char)((src) >> 16); \
+	(dst)[3] = (unsigned char)((src) >> 24);
+
 static uint32_t shift_table[64] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -86,16 +68,9 @@ static uint32_t shift_table[64] = {
 	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391,
 };
 
-/* A, B, C, and D buffers initial values */
 enum buf_init_state {
     a0 = (uint32_t)0x67452301, b0 = (uint32_t)0xefcdab89,
     c0 = (uint32_t)0x98badcfe, d0 = (uint32_t)0x10325476
-};
-
-static unsigned char padding[64] = {
-    0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 void        md5(t_container container);
