@@ -1,5 +1,11 @@
 #include "../inc/ssl.h"
 
+/*
+Attribution:
+    Based on Alexander Peslyak's MD5 implementation
+    openwall.com - public domain sorouce code
+*/
+
 void MD5_Init(MD5_CTX *ctx)
 {
 	ctx->state[0] = a0;
