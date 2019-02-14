@@ -18,6 +18,7 @@ void    read_stdin(t_list **message)
     }
     new_message = ft_lstnew(str, ft_strlen(str));
     new_message->content_size = IS_STR;
+    new_message->content_size |= P_APPEND;
     ft_lstadd(message, new_message);
 }
 
