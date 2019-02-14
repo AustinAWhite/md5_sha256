@@ -14,6 +14,7 @@
 # define LIBFT_H
 
 # include "ft_stack.h"
+# include <fcntl.h>
 # include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
