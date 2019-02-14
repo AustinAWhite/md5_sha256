@@ -24,9 +24,9 @@ static const void *transform(MD5_CTX *ctx, const void *data, unsigned long size)
     MD5_u32plus B;
     MD5_u32plus C;
     MD5_u32plus D;
-	MD5_u32plus saved_A; 
-    MD5_u32plus saved_B; 
-    MD5_u32plus saved_C; 
+	MD5_u32plus saved_A;
+    MD5_u32plus saved_B;
+    MD5_u32plus saved_C;
     MD5_u32plus saved_D;
 
 	ptr = (const unsigned char *)data;
@@ -178,14 +178,44 @@ void MD5_Final(unsigned char *result, MD5_CTX *ctx)
 	ft_memset(ctx, 0, sizeof(*ctx));
 }
 
+char *readfile(char *path)
+{
+    char *message;
+    char *tmp;
+    char buf[READ_FILE_SIZE + 1];
+    int ret;
+    int fd;
+
+    message = ft_strnew(1);
+    fd = open(path, O_RDONLY);
+    while ((ret = read(fd, buf, READ_BUF_SIZE)) > 0)
+    {
+        buf[ret] = '\0';
+        tmp = ft_strjoin(message, buf);
+        free(message);
+        message = tmp;
+    }
+    if (ret == -1)
+        return (NULL);
+    close(fd);
+    return (message);
+}
+
 void digest(t_container container)
 {
     MD5_CTX context;
 	unsigned char digest[16];
-	unsigned int len = strlen (container.message->content);
+    char *message;
+	unsigned int len;
 
+    if (container.message->content_size & IS_STR)
+        message = container.message->content;
+    else
+        if ((message = readfile(container.message->content)) == NULL)
+            return;
+    len = ft_strlen(message);
 	MD5_Init (&context);
-	MD5_Update (&context, container.message->content, len);
+	MD5_Update (&context, message, len);
 	MD5_Final (digest, &context);
 
 	printf ("MD5 (\"%s\") = ", container.message->content);
@@ -196,11 +226,21 @@ void digest(t_container container)
 
 void md5(t_container container)
 {
+    struct stat fstat;
     while (container.message) {
         if (container.message->content_size & IS_STR)
             digest(container);
-        else if (container.message->content_size & IS_FILE)
-            ft_putstr("\'twas a file\n");
+        else if (container.message->content_size & IS_FILE) {
+            if (access(container.message->content, F_OK) != -1) {
+                stat(container.message->content, &fstat);
+                if (S_ISDIR(fstat.st_mode))
+                    file_error("md5", container.message->content, "Is a directory");
+                else
+                    digest(container);
+            }
+            else
+                file_error("md5", container.message->content, "No such file or directory");
+        }
         container.message = container.message->next;
     }
 }
