@@ -49,7 +49,7 @@ typedef struct {
 	(dst)[2] = (unsigned char)((src) >> 16); \
 	(dst)[3] = (unsigned char)((src) >> 24);
 
-static uint32_t shift_table[64] = {
+static uint32_t k[64] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
     0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
