@@ -61,3 +61,12 @@ void        invalid_alg(char *alg)
     print_available();
     exit(EXIT_FAILURE);
 }
+
+void        file_error(char *hash_alg, char *command, char *err)
+{
+    ft_putstr_fd(hash_alg, STDERR_FILENO);
+    ft_putstr_fd(": ", STDERR_FILENO);
+    ft_putstr_fd(command, STDERR_FILENO);
+    ft_putstr_fd(": ", STDERR_FILENO);
+    ft_putendl_fd(err, STDERR_FILENO);
+}
