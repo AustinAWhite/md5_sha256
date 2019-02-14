@@ -14,8 +14,9 @@
 #define FLG_Q 0x2
 #define FLG_R 0x4
 #define FLG_S 0x8
-#define IS_STR 0x10
-#define IS_FILE 0x20
+#define P_APPEND 0x10
+#define IS_STR 0x20
+#define IS_FILE 0x40
 #define FLAGSTR "pqrs"
 #define READ_BUF_SIZE 4096
 #define READ_FILE_SIZE 4096
