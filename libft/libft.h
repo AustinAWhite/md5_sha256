@@ -6,7 +6,7 @@
 /*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/26 13:54:07 by awhite            #+#    #+#             */
-/*   Updated: 2019/01/19 23:18:40 by awhite           ###   ########.fr       */
+/*   Updated: 2019/02/13 19:12:25 by awhite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,7 @@ char				**ft_strtok_mod(char *s, char *delims);
 int					ft_strarrlen(char **str);
 int					ft_chrindex(char *str, char c);
 void    			ft_lstappend(t_list **blst, t_list *newelem);
+char				*ft_itoa_base(int value, int base);
+
 
 #endif
