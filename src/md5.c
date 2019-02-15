@@ -178,64 +178,6 @@ void MD5_Final(unsigned char *result, MD5_CTX *ctx)
 	ft_memset(ctx, 0, sizeof(*ctx));
 }
 
-char *readfile(char *path)
-{
-    char *message;
-    char *tmp;
-    char buf[READ_FILE_SIZE + 1];
-    int ret;
-    int fd;
-
-    message = ft_strnew(1);
-    fd = open(path, O_RDONLY);
-    while ((ret = read(fd, buf, READ_BUF_SIZE)) > 0)
-    {
-        buf[ret] = '\0';
-        tmp = ft_strjoin(message, buf);
-        free(message);
-        message = tmp;
-    }
-    if (ret == -1)
-        return (NULL);
-    close(fd);
-    return (message);
-}
-
-void MD5_print(t_container container, unsigned char digest[])
-{
-    if (!(container.flags & FLG_Q) && !(container.flags & FLG_R) && !(container.message->content_size & P_APPEND)) {
-        if (container.message->content_size & IS_STR) {
-            ft_putstr("MD5 (\"");
-            ft_putstr(container.message->content);
-            ft_putstr("\") = ");
-        }
-        else if (container.message->content_size & IS_FILE) {
-            ft_putstr("MD5 (");
-            ft_putstr(container.message->content);
-            ft_putstr(") = ");
-        }
-    }
-    if ((container.flags & FLG_P) && (container.message->content_size & P_APPEND))
-        ft_putstr(container.message->content);
-    for (int i = 0; i < 16; i++) {
-        if (digest[i] < 0xF)
-            ft_putchar('0');       
-        ft_putstr(ft_itoa_base(digest[i], 16));
-    }
-    if (container.flags & FLG_R && !(container.message->content_size & P_APPEND) && !(container.flags & FLG_Q)) {
-        if (container.message->content_size & IS_STR) {
-            ft_putstr(" \"");
-            ft_putstr(container.message->content);
-            ft_putstr("\"");
-        }
-        else if (container.message->content_size & IS_FILE) {
-            ft_putstr(" ");
-            ft_putstr(container.message->content);
-        }
-    }
-    ft_putendl("");
-}
-
 void digest(t_container container)
 {
     MD5_CTX context;
@@ -252,7 +194,7 @@ void digest(t_container container)
 	MD5_Init (&context);
 	MD5_Update (&context, message, len);
 	MD5_Final (digest, &context);
-    MD5_print(container, digest);
+    print_hash(container, digest, 16);
 }
 
 void md5(t_container container)
