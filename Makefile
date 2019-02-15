@@ -1,6 +1,6 @@
 NAME	=	ft_ssl
 #CFLAGS	=	-Wall -Werror -Wextra
-FILES	=	ssl parse_input error md5 sha256
+FILES	=	ssl parse_input error md5 sha256 utils
 SRC		=	$(FILES:%=src/%.c)
 OBJ		=	$(SRC:%.c=%.o)
 
