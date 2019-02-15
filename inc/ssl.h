@@ -32,5 +32,6 @@ void                    arg_required(char *hash_alg, char c);
 void                    file_error(char *hash_alg, char *command, char *err);
 
 t_container             parse_input(int ac, char **av);
+char                    *readfile(char *path);
 
 #endif
