@@ -35,15 +35,9 @@ static const uint32_t sha256_k[64] = {
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-enum sha256_buf_init {
-    sha_h1 = (u_int32_t)0x6a09e667,
-    sha_h2 = (u_int32_t)0xbb67ae85,
-    sha_h3 = (u_int32_t)0x3c6ef372,
-    sha_h4 = (u_int32_t)0xa54ff53a,
-    sha_h5 = (u_int32_t)0x510e527f,
-    sha_h6 = (u_int32_t)0x9b05688c,
-    sha_h7 = (u_int32_t)0x1f83d9ab,
-    sha_h8 = (u_int32_t)0x5be0cd19
+static const uint32_t sha256_buf_init[8] = {
+    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+    0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 };
 
 void             sha256(t_container container);
