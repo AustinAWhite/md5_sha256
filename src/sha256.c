@@ -111,41 +111,6 @@ void sha_transform(uint8_t hash[32], const void *input, size_t len)
 	}
 }		
 
-void sha256_print(t_container container, unsigned char hash[])
-{
-    if (!(container.flags & FLG_Q) && !(container.flags & FLG_R) && !(container.message->content_size & P_APPEND)) {
-        if (container.message->content_size & IS_STR) {
-            ft_putstr("SHA256 (\"");
-            ft_putstr(container.message->content);
-            ft_putstr("\") = ");
-        }
-        else if (container.message->content_size & IS_FILE) {
-            ft_putstr("SHA256 (");
-            ft_putstr(container.message->content);
-            ft_putstr(") = ");
-        }
-    }
-    if ((container.flags & FLG_P) && (container.message->content_size & P_APPEND))
-        ft_putstr(container.message->content);
-    for (int i = 0; i < 32; i++) {
-        if (hash[i] < 0xF)
-            ft_putchar('0');       
-        ft_putstr(ft_itoa_base(hash[i], 16));
-    }
-    if (container.flags & FLG_R && !(container.message->content_size & P_APPEND) && !(container.flags & FLG_Q)) {
-        if (container.message->content_size & IS_STR) {
-            ft_putstr(" \"");
-            ft_putstr(container.message->content);
-            ft_putstr("\"");
-        }
-        else if (container.message->content_size & IS_FILE) {
-            ft_putstr(" ");
-            ft_putstr(container.message->content);
-        }
-    }
-    ft_putendl("");
-}
-
 void calc_hash(t_container container)
 {
     uint8_t hash[32];
@@ -160,7 +125,7 @@ void calc_hash(t_container container)
             return;
     len = ft_strlen(message);
     sha_transform(hash, message, len);
-    sha256_print(container, hash);
+    print_hash(container, hash, 32);
 }
 
 void sha256(t_container container)
