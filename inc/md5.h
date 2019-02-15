@@ -49,7 +49,7 @@ typedef struct {
 	(dst)[2] = (unsigned char)((src) >> 16); \
 	(dst)[3] = (unsigned char)((src) >> 24);
 
-static uint32_t k[64] = {
+static uint32_t md5_k[64] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
     0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
@@ -65,12 +65,14 @@ static uint32_t k[64] = {
     0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039,
     0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1,
     0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
-	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391,
+	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
-enum buf_init_state {
-    a0 = (uint32_t)0x67452301, b0 = (uint32_t)0xefcdab89,
-    c0 = (uint32_t)0x98badcfe, d0 = (uint32_t)0x10325476
+enum md5_buf_init {
+    md5_a0 = (uint32_t)0x67452301,
+    md5_b0 = (uint32_t)0xefcdab89,
+    md5_c0 = (uint32_t)0x98badcfe,
+    md5_d0 = (uint32_t)0x10325476
 };
 
 void        md5(t_container container);
