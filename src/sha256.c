@@ -6,11 +6,6 @@ Attribution:
     github.com/amosnier
 */
 
-static inline uint32_t right_rot(uint32_t value, unsigned int count)
-{
-	return value >> count | value << (32 - count);
-}
-
 static void init_buf_state(struct buffer_state *state, const void * input, size_t len)
 {
 	state->p = input;
@@ -81,17 +76,17 @@ void sha_transform(uint8_t hash[32], const void *input, size_t len)
 			p += 4;
 		}
 		for (i = 16; i < 64; i++) {
-			const uint32_t s0 = right_rot(w[i - 15], 7) ^ right_rot(w[i - 15], 18) ^ (w[i - 15] >> 3);
-			const uint32_t s1 = right_rot(w[i - 2], 17) ^ right_rot(w[i - 2], 19) ^ (w[i - 2] >> 10);
+			const uint32_t s0 = SHIFT_RIGHT(w[i - 15], 7) ^ SHIFT_RIGHT(w[i - 15], 18) ^ (w[i - 15] >> 3);
+			const uint32_t s1 = SHIFT_RIGHT(w[i - 2], 17) ^ SHIFT_RIGHT(w[i - 2], 19) ^ (w[i - 2] >> 10);
 			w[i] = w[i - 16] + s0 + w[i - 7] + s1;
 		}
 		for (i = 0; i < 8; i++)
 			ah[i] = h[i];
 		for (i = 0; i < 64; i++) {
-			const uint32_t s1 = right_rot(ah[4], 6) ^ right_rot(ah[4], 11) ^ right_rot(ah[4], 25);
+			const uint32_t s1 = SHIFT_RIGHT(ah[4], 6) ^ SHIFT_RIGHT(ah[4], 11) ^ SHIFT_RIGHT(ah[4], 25);
 			const uint32_t ch = (ah[4] & ah[5]) ^ (~ah[4] & ah[6]);
 			const uint32_t temp1 = ah[7] + s1 + ch + sha256_k[i] + w[i];
-			const uint32_t s0 = right_rot(ah[0], 2) ^ right_rot(ah[0], 13) ^ right_rot(ah[0], 22);
+			const uint32_t s0 = SHIFT_RIGHT(ah[0], 2) ^ SHIFT_RIGHT(ah[0], 13) ^ SHIFT_RIGHT(ah[0], 22);
 			const uint32_t maj = (ah[0] & ah[1]) ^ (ah[0] & ah[2]) ^ (ah[1] & ah[2]);
 			const uint32_t temp2 = s0 + maj;
 
