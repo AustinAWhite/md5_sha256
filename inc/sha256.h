@@ -8,13 +8,14 @@
 #define TOTAL_LEN_LEN 8
 #define SHIFT_RIGHT(x, n)(x >> n | x << (32 - n))
 
-struct buffer_state {
+typedef struct {
+	u_int32_t state[8];
 	const uint8_t *p;
 	size_t len;
 	size_t total_len;
 	int single_one_delivered;
 	int total_len_delivered;
-};
+} sha256_ctx;
 
 static const uint32_t sha256_k[64] = {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -35,9 +36,15 @@ static const uint32_t sha256_k[64] = {
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-static const uint32_t sha256_buf_init[8] = {
-    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-    0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+enum sha256_buf_init {
+	sha256_h0 = (u_int32_t)0x6a09e667,
+	sha256_h1 = (u_int32_t)0xbb67ae85,
+	sha256_h2 = (u_int32_t)0x3c6ef372,
+	sha256_h3 = (u_int32_t)0xa54ff53a,
+    sha256_h4 = (u_int32_t)0x510e527f,
+	sha256_h5 = (u_int32_t)0x9b05688c,
+	sha256_h6 = (u_int32_t)0x1f83d9ab,
+	sha256_h7 = (u_int32_t)0x5be0cd19
 };
 
 void             sha256(t_container container);
