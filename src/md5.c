@@ -6,7 +6,7 @@ Attribution:
     openwall.com - public domain sorouce code
 */
 
-void MD5_Init(MD5_CTX *ctx)
+void MD5_Init(md5_ctx *ctx)
 {
 	ctx->state[0] = md5_a0;
 	ctx->state[1] = md5_b0;
@@ -17,7 +17,7 @@ void MD5_Init(MD5_CTX *ctx)
 	ctx->count[1] = 0;
 }
 
-static const void *transform(MD5_CTX *ctx, const void *data, unsigned long size)
+static const void *transform(md5_ctx *ctx, const void *data, unsigned long size)
 {
 	const unsigned char *ptr;
 	u_int32_t A;
@@ -122,7 +122,7 @@ static const void *transform(MD5_CTX *ctx, const void *data, unsigned long size)
 	return (ptr);
 }
 
-void MD5_Update(MD5_CTX *ctx, const void *data, unsigned long size)
+void MD5_Update(md5_ctx *ctx, const void *data, unsigned long size)
 {
 	u_int32_t saved_lo;
 	unsigned long used;
@@ -152,7 +152,7 @@ void MD5_Update(MD5_CTX *ctx, const void *data, unsigned long size)
 	ft_memcpy(ctx->buffer, data, size);
 }
 
-void MD5_Final(unsigned char *result, MD5_CTX *ctx)
+void MD5_Final(unsigned char *result, md5_ctx *ctx)
 {
 	unsigned long used;
     unsigned long available;
@@ -180,8 +180,8 @@ void MD5_Final(unsigned char *result, MD5_CTX *ctx)
 
 void digest(t_container container)
 {
-    MD5_CTX context;
-	unsigned char digest[16];
+    md5_ctx ctx;
+	u_int8_t digest[16];
     char *message;
 	unsigned int len;
 
@@ -191,9 +191,9 @@ void digest(t_container container)
         if ((message = readfile(container.message->content)) == NULL)
             return;
     len = ft_strlen(message);
-	MD5_Init (&context);
-	MD5_Update (&context, message, len);
-	MD5_Final (digest, &context);
+	MD5_Init (&ctx);
+	MD5_Update (&ctx, message, len);
+	MD5_Final (digest, &ctx);
     print_hash(container, digest, 16);
 }
 

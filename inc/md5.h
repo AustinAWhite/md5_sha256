@@ -23,9 +23,9 @@
 typedef struct {
     u_int32_t state[4];
     u_int32_t count[2];
-    unsigned char buffer[64];
+    u_int8_t buffer[64];
     u_int32_t block[16];
-} MD5_CTX;
+} md5_ctx;
 
 #define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
 #define GET(n) SET(n)
