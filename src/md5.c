@@ -168,13 +168,13 @@ void md5_final(unsigned char *digest, md5_ctx *ctx)
 	}
 	ft_memset(&ctx->buffer[used], 0, available - 8);
 	ctx->count[0] <<= 3;
-	OUT(&ctx->buffer[56], ctx->count[0])
-	OUT(&ctx->buffer[60], ctx->count[1])
+	MD_OUT(&ctx->buffer[56], ctx->count[0])
+	MD_OUT(&ctx->buffer[60], ctx->count[1])
 	md5_transform(ctx, ctx->buffer, 64);
-	OUT(&digest[0], ctx->state[0])
-	OUT(&digest[4], ctx->state[1])
-	OUT(&digest[8], ctx->state[2])
-	OUT(&digest[12], ctx->state[3])
+	MD_OUT(&digest[0], ctx->state[0])
+	MD_OUT(&digest[4], ctx->state[1])
+	MD_OUT(&digest[8], ctx->state[2])
+	MD_OUT(&digest[12], ctx->state[3])
 	ft_memset(ctx, 0, sizeof(*ctx));
 }
 
