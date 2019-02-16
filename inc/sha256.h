@@ -20,8 +20,8 @@ typedef struct {
 
 typedef struct {
 	u_int32_t state[8];
-	u_int8_t buffer[CHUNK_SIZE];
-	const uint8_t *p;
+	u_int8_t chunk[CHUNK_SIZE];
+	const uint8_t *message;
 	size_t len;
 	size_t total_len;
 	int single_one_delivered;

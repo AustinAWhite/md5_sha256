@@ -6,7 +6,7 @@ Attribution:
     github.com/amosnier
 */
 
-static void init_buf_state(sha256_ctx *ctx, const void *input, size_t len)
+static void init_buf_state(sha256_ctx *ctx, const void *message, size_t len)
 {
 	ctx->state[0] = sha256_h0;
 	ctx->state[1] = sha256_h1;
@@ -16,7 +16,7 @@ static void init_buf_state(sha256_ctx *ctx, const void *input, size_t len)
 	ctx->state[5] = sha256_h5;
 	ctx->state[6] = sha256_h6;
 	ctx->state[7] = sha256_h7;
-	ctx->p = input;
+	ctx->message = message;
 	ctx->len = len;
 	ctx->total_len = len;
 	ctx->single_one_delivered = 0;
@@ -31,15 +31,15 @@ static int calc_chunk(uint8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 		return 0;
 	}
 	if (ctx->len >= CHUNK_SIZE) {
-		memcpy(buffer, ctx->p, CHUNK_SIZE);
-		ctx->p += CHUNK_SIZE;
+		memcpy(buffer, ctx->message, CHUNK_SIZE);
+		ctx->message += CHUNK_SIZE;
 		ctx->len -= CHUNK_SIZE;
 		return 1;
 	}
-	memcpy(buffer, ctx->p, ctx->len);
+	memcpy(buffer, ctx->message, ctx->len);
 	buffer += ctx->len;
 	space_in_chunk = CHUNK_SIZE - ctx->len;
-	ctx->p += ctx->len;
+	ctx->message += ctx->len;
 	ctx->len = 0;
 	if (!ctx->single_one_delivered) {
 		*buffer++ = 0x80;
@@ -70,16 +70,15 @@ void sha_transform(sha256_ctx *ctx, uint8_t hash[32], size_t len)
 	int i, j;
 	sha256_vars vars;
 	u_int32_t w_bufs[8];
-	const u_int8_t *ctxbuf_cpy;
+	const u_int8_t *chunk_cpy;
 	
-	while (calc_chunk(ctx->buffer, ctx)) {
-		
-		ctxbuf_cpy = ctx->buffer;
+	while (calc_chunk(ctx->chunk, ctx)) {
+		chunk_cpy = ctx->chunk;
 		memset(vars.w, 0x00, sizeof vars.w);
 		for (i = 0; i < 16; i++) {
-			vars.w[i] = (uint32_t) ctxbuf_cpy[0] << 24 | (uint32_t) ctxbuf_cpy[1] << 16 |
-							(uint32_t) ctxbuf_cpy[2] << 8 | (uint32_t) ctxbuf_cpy[3];
-			ctxbuf_cpy += 4;
+			vars.w[i] = (uint32_t)chunk_cpy[0] << 24 | (uint32_t)chunk_cpy[1] << 16 |
+							(uint32_t)chunk_cpy[2] << 8 | (uint32_t)chunk_cpy[3];
+			chunk_cpy += 4;
 		}
 		for (i = 16; i < 64; i++) {
 			vars.s0 = SHIFT_RIGHT(vars.w[i - 15], 7) ^ SHIFT_RIGHT(vars.w[i - 15], 18) ^ (vars.w[i - 15] >> 3);
@@ -110,10 +109,10 @@ void sha_transform(sha256_ctx *ctx, uint8_t hash[32], size_t len)
 	}
 	for (i = 0, j = 0; i < 8; i++)
 	{
-		hash[j++] = (uint8_t) (ctx->state[i] >> 24);
-		hash[j++] = (uint8_t) (ctx->state[i] >> 16);
-		hash[j++] = (uint8_t) (ctx->state[i] >> 8);
-		hash[j++] = (uint8_t) ctx->state[i];
+		hash[j++] = (uint8_t)(ctx->state[i] >> 24);
+		hash[j++] = (uint8_t)(ctx->state[i] >> 16);
+		hash[j++] = (uint8_t)(ctx->state[i] >> 8);
+		hash[j++] = (uint8_t)ctx->state[i];
 	}
 }		
 
