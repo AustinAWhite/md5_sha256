@@ -65,7 +65,7 @@ static int calc_chunk(u_int8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 	return 1;
 }
 
-void sha_transform(sha256_ctx *ctx, u_int8_t hash[32], size_t len)
+void sha_transform(sha256_ctx *ctx, u_int8_t hash[32])
 {
 	int i, j;
 	sha256_vars vars;
@@ -116,7 +116,7 @@ void sha_transform(sha256_ctx *ctx, u_int8_t hash[32], size_t len)
     }
 }	
 
-void calc_hash(t_container container)
+void sha256(t_container container)
 {
 	sha256_ctx ctx;
     u_int8_t hash[32];
@@ -130,30 +130,6 @@ void calc_hash(t_container container)
             return;
     len = ft_strlen(message);
 	init_buf_state(&ctx, message, len);
-    sha_transform(&ctx, hash, len);
+    sha_transform(&ctx, hash);
     print_hash(container, hash, 32);
-}
-
-void sha256(t_container container)
-{
-    struct stat fstat;
-
-    while (container.message) {
-        if (container.message->content_size & IS_STR)
-            calc_hash(container);
-        else if (container.message->content_size & IS_FILE) {
-            if (access(container.message->content, F_OK) != -1) {
-                stat(container.message->content, &fstat);
-                if (S_ISDIR(fstat.st_mode))
-                    file_error("sha256", container.message->content,
-											"Is a directory");
-                else
-                    calc_hash(container);
-            }
-            else
-                file_error("sha256", container.message->content,
-											"No such file or directory");
-        }
-        container.message = container.message->next;
-    }
 }

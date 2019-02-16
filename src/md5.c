@@ -178,7 +178,7 @@ void md5_final(unsigned char *digest, md5_ctx *ctx)
 	ft_memset(ctx, 0, sizeof(*ctx));
 }
 
-void digest(t_container container)
+void md5(t_container container)
 {
     md5_ctx ctx;
 	u_int8_t digest[16];
@@ -195,28 +195,4 @@ void digest(t_container container)
 	md5_update(&ctx, message, len);
 	md5_final(digest, &ctx);
     print_hash(container, digest, 16);
-}
-
-void md5(t_container container)
-{
-    struct stat fstat;
-	
-    while (container.message) {
-        if (container.message->content_size & IS_STR)
-            digest(container);
-        else if (container.message->content_size & IS_FILE) {
-            if (access(container.message->content, F_OK) != -1) {
-                stat(container.message->content, &fstat);
-                if (S_ISDIR(fstat.st_mode))
-                    file_error("md5", container.message->content,
-										"Is a directory");
-                else
-                    digest(container);
-            }
-            else
-                file_error("md5", container.message->content,
-										"No such file or directory");
-        }
-        container.message = container.message->next;
-    }
 }
