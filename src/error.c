@@ -6,10 +6,10 @@ static void print_available()
 
     i = -1;
     ft_putendl("Available hashing algorithms:");
-    while (g_dispatch_lookup[++i])
+    while (dispatch_lookup[++i])
     {
         ft_putstr_fd("\t", STDERR_FILENO);
-        ft_putendl_fd(g_dispatch_lookup[i], STDERR_FILENO);
+        ft_putendl_fd(dispatch_lookup[i], STDERR_FILENO);
     }
 }
 
@@ -18,10 +18,10 @@ void        print_usage(char *hash_alg)
     int i;
 
     i = -1;
-    while (g_dispatch_lookup[++i])
-        if (ft_strequ(g_dispatch_lookup[i], hash_alg))
+    while (dispatch_lookup[++i])
+        if (ft_strequ(dispatch_lookup[i], hash_alg))
         {
-            ft_putendl_fd(g_dispatch_usage[i], STDERR_FILENO);
+            ft_putendl_fd(dispatch_usage[i], STDERR_FILENO);
             break ;
         }
 }
