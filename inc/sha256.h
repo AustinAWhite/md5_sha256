@@ -10,6 +10,7 @@
 
 typedef struct {
 	u_int32_t state[8];
+	u_int8_t buffer[CHUNK_SIZE];
 	const uint8_t *p;
 	size_t len;
 	size_t total_len;
