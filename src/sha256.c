@@ -68,48 +68,42 @@ static int calc_chunk(uint8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 void sha_transform(sha256_ctx *ctx, uint8_t hash[32], size_t len)
 {
 	int i, j;
+	sha256_vars vars;
 	u_int32_t w_bufs[8];
 	const u_int8_t *ctxbuf_cpy;
-	uint32_t w[64];
-	uint32_t s0;
-	uint32_t s1;
-	uint32_t ch;
-	uint32_t maj;
-	uint32_t temp1;
-	uint32_t temp2;
 	
 	while (calc_chunk(ctx->buffer, ctx)) {
 		
 		ctxbuf_cpy = ctx->buffer;
-		memset(w, 0x00, sizeof w);
+		memset(vars.w, 0x00, sizeof vars.w);
 		for (i = 0; i < 16; i++) {
-			w[i] = (uint32_t) ctxbuf_cpy[0] << 24 | (uint32_t) ctxbuf_cpy[1] << 16 |
+			vars.w[i] = (uint32_t) ctxbuf_cpy[0] << 24 | (uint32_t) ctxbuf_cpy[1] << 16 |
 							(uint32_t) ctxbuf_cpy[2] << 8 | (uint32_t) ctxbuf_cpy[3];
 			ctxbuf_cpy += 4;
 		}
 		for (i = 16; i < 64; i++) {
-			s0 = SHIFT_RIGHT(w[i - 15], 7) ^ SHIFT_RIGHT(w[i - 15], 18) ^ (w[i - 15] >> 3);
-			s1 = SHIFT_RIGHT(w[i - 2], 17) ^ SHIFT_RIGHT(w[i - 2], 19) ^ (w[i - 2] >> 10);
-			w[i] = w[i - 16] + s0 + w[i - 7] + s1;
+			vars.s0 = SHIFT_RIGHT(vars.w[i - 15], 7) ^ SHIFT_RIGHT(vars.w[i - 15], 18) ^ (vars.w[i - 15] >> 3);
+			vars.s1 = SHIFT_RIGHT(vars.w[i - 2], 17) ^ SHIFT_RIGHT(vars.w[i - 2], 19) ^ (vars.w[i - 2] >> 10);
+			vars.w[i] = vars.w[i - 16] + vars.s0 + vars.w[i - 7] + vars.s1;
 		}
 		for (i = 0; i < 8; i++)
 			w_bufs[i] = ctx->state[i];
 		for (i = 0; i < 64; i++) {
-			s1 = SHIFT_RIGHT(w_bufs[4], 6) ^ SHIFT_RIGHT(w_bufs[4], 11) ^ SHIFT_RIGHT(w_bufs[4], 25);
-			ch = (w_bufs[4] & w_bufs[5]) ^ (~w_bufs[4] & w_bufs[6]);
-			temp1 = w_bufs[7] + s1 + ch + sha256_k[i] + w[i];
-			s0 = SHIFT_RIGHT(w_bufs[0], 2) ^ SHIFT_RIGHT(w_bufs[0], 13) ^ SHIFT_RIGHT(w_bufs[0], 22);
-			maj = (w_bufs[0] & w_bufs[1]) ^ (w_bufs[0] & w_bufs[2]) ^ (w_bufs[1] & w_bufs[2]);
-			temp2 = s0 + maj;
+			vars.s1 = SHIFT_RIGHT(w_bufs[4], 6) ^ SHIFT_RIGHT(w_bufs[4], 11) ^ SHIFT_RIGHT(w_bufs[4], 25);
+			vars.ch = (w_bufs[4] & w_bufs[5]) ^ (~w_bufs[4] & w_bufs[6]);
+			vars.temp1 = w_bufs[7] + vars.s1 + vars.ch + sha256_k[i] + vars.w[i];
+			vars.s0 = SHIFT_RIGHT(w_bufs[0], 2) ^ SHIFT_RIGHT(w_bufs[0], 13) ^ SHIFT_RIGHT(w_bufs[0], 22);
+			vars.maj = (w_bufs[0] & w_bufs[1]) ^ (w_bufs[0] & w_bufs[2]) ^ (w_bufs[1] & w_bufs[2]);
+			vars.temp2 = vars.s0 + vars.maj;
 
 			w_bufs[7] = w_bufs[6];
 			w_bufs[6] = w_bufs[5];
 			w_bufs[5] = w_bufs[4];
-			w_bufs[4] = w_bufs[3] + temp1;
+			w_bufs[4] = w_bufs[3] + vars.temp1;
 			w_bufs[3] = w_bufs[2];
 			w_bufs[2] = w_bufs[1];
 			w_bufs[1] = w_bufs[0];
-			w_bufs[0] = temp1 + temp2;
+			w_bufs[0] = vars.temp1 + vars.temp2;
 		}
 		for (i = 0; i < 8; i++)
 			ctx->state[i] += w_bufs[i];

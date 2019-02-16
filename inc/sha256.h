@@ -9,6 +9,16 @@
 #define SHIFT_RIGHT(x, n)(x >> n | x << (32 - n))
 
 typedef struct {
+	uint32_t w[64];
+	uint32_t s0;
+	uint32_t s1;
+	uint32_t ch;
+	uint32_t maj;
+	uint32_t temp1;
+	uint32_t temp2;
+} sha256_vars;
+
+typedef struct {
 	u_int32_t state[8];
 	u_int8_t buffer[CHUNK_SIZE];
 	const uint8_t *p;
