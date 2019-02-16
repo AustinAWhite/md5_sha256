@@ -65,14 +65,12 @@ static int calc_chunk(uint8_t chunk[CHUNK_SIZE], sha256_ctx *ctx)
 	return 1;
 }
 
-void sha_transform(uint8_t hash[32], const void *input, size_t len)
+void sha_transform(sha256_ctx *ctx, uint8_t hash[32], const void *input, size_t len)
 {
 	int i, j;
 	uint8_t chunk[64];
-	sha256_ctx ctx;
-
-	init_buf_state(&ctx, input, len);
-	while (calc_chunk(chunk, &ctx)) {
+	
+	while (calc_chunk(chunk, ctx)) {
 		uint32_t ah[8];
 		uint32_t w[64];
 		const uint8_t *p = chunk;
@@ -88,7 +86,7 @@ void sha_transform(uint8_t hash[32], const void *input, size_t len)
 			w[i] = w[i - 16] + s0 + w[i - 7] + s1;
 		}
 		for (i = 0; i < 8; i++)
-			ah[i] = ctx.state[i];
+			ah[i] = ctx->state[i];
 		for (i = 0; i < 64; i++) {
 			const uint32_t s1 = SHIFT_RIGHT(ah[4], 6) ^ SHIFT_RIGHT(ah[4], 11) ^ SHIFT_RIGHT(ah[4], 25);
 			const uint32_t ch = (ah[4] & ah[5]) ^ (~ah[4] & ah[6]);
@@ -107,23 +105,23 @@ void sha_transform(uint8_t hash[32], const void *input, size_t len)
 			ah[0] = temp1 + temp2;
 		}
 		for (i = 0; i < 8; i++)
-			ctx.state[i] += ah[i];
+			ctx->state[i] += ah[i];
 	}
 	for (i = 0, j = 0; i < 8; i++)
 	{
-		hash[j++] = (uint8_t) (ctx.state[i] >> 24);
-		hash[j++] = (uint8_t) (ctx.state[i] >> 16);
-		hash[j++] = (uint8_t) (ctx.state[i] >> 8);
-		hash[j++] = (uint8_t) ctx.state[i];
+		hash[j++] = (uint8_t) (ctx->state[i] >> 24);
+		hash[j++] = (uint8_t) (ctx->state[i] >> 16);
+		hash[j++] = (uint8_t) (ctx->state[i] >> 8);
+		hash[j++] = (uint8_t) ctx->state[i];
 	}
 }		
 
 void calc_hash(t_container container)
 {
+	sha256_ctx ctx;
     uint8_t hash[32];
-	char hash_string[65];
+	char *message;
 	unsigned int len;
-    char *message;
 
     if (container.message->content_size & IS_STR)
         message = container.message->content;
@@ -131,13 +129,15 @@ void calc_hash(t_container container)
         if ((message = readfile(container.message->content)) == NULL)
             return;
     len = ft_strlen(message);
-    sha_transform(hash, message, len);
+	init_buf_state(&ctx, message, len);
+    sha_transform(&ctx, hash, message, len);
     print_hash(container, hash, 32);
 }
 
 void sha256(t_container container)
 {
     struct stat fstat;
+	
     while (container.message) {
         if (container.message->content_size & IS_STR)
             calc_hash(container);
@@ -145,12 +145,14 @@ void sha256(t_container container)
             if (access(container.message->content, F_OK) != -1) {
                 stat(container.message->content, &fstat);
                 if (S_ISDIR(fstat.st_mode))
-                    file_error("md5", container.message->content, "Is a directory");
+                    file_error("sha256", container.message->content,
+											"Is a directory");
                 else
                     calc_hash(container);
             }
             else
-                file_error("md5", container.message->content, "No such file or directory");
+                file_error("sha256", container.message->content,
+											"No such file or directory");
         }
         container.message = container.message->next;
     }
