@@ -34,7 +34,7 @@ void print_hash(t_container container, unsigned char hash[], unsigned int size)
         }
         else if (container.message->content_size & IS_FILE) {
             ft_putstr(container.hash_alg);
-            ft_putstr(" (\"");
+            ft_putstr(" (");
             ft_putstr(container.message->content);
             ft_putstr(") = ");
         }
