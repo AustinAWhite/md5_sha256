@@ -5,17 +5,23 @@
 #include <inttypes.h>
 
 #define CHUNK_SIZE 64
-#define TOTAL_LEN_LEN 8
+#define TOTAL_LEN 8
 #define SHIFT_RIGHT(x, n)(x >> n | x << (32 - n))
 
+#define SHA256_OUT(dst, src) \
+	(dst)[0] = (unsigned char)((src) >> 24); \
+	(dst)[1] = (unsigned char)((src) >> 16); \
+	(dst)[2] = (unsigned char)((src) >> 8); \
+	(dst)[3] = (unsigned char)(src); \
+
 typedef struct {
-	uint32_t w[64];
-	uint32_t s0;
-	uint32_t s1;
-	uint32_t ch;
-	uint32_t maj;
-	uint32_t temp1;
-	uint32_t temp2;
+	u_int32_t w[64];
+	u_int32_t s0;
+	u_int32_t s1;
+	u_int32_t ch;
+	u_int32_t maj;
+	u_int32_t temp1;
+	u_int32_t temp2;
 } sha256_vars;
 
 typedef struct {
@@ -25,10 +31,10 @@ typedef struct {
 	size_t len;
 	size_t total_len;
 	int single_one_delivered;
-	int total_len_delivered;
+	int complete;
 } sha256_ctx;
 
-static const uint32_t sha256_k[64] = {
+static const u_int32_t sha256_k[64] = {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
 	0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,

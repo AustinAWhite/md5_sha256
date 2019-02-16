@@ -20,14 +20,14 @@ static void init_buf_state(sha256_ctx *ctx, const void *message, size_t len)
 	ctx->len = len;
 	ctx->total_len = len;
 	ctx->single_one_delivered = 0;
-	ctx->total_len_delivered = 0;
+	ctx->complete = 0;
 }
 
-static int calc_chunk(uint8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
+static int calc_chunk(u_int8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 {
-	size_t space_in_chunk;
+	size_t space_left;
 
-	if (ctx->total_len_delivered) {
+	if (ctx->complete) {
 		return 0;
 	}
 	if (ctx->len >= CHUNK_SIZE) {
@@ -38,34 +38,34 @@ static int calc_chunk(uint8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 	}
 	memcpy(buffer, ctx->message, ctx->len);
 	buffer += ctx->len;
-	space_in_chunk = CHUNK_SIZE - ctx->len;
+	space_left = CHUNK_SIZE - ctx->len;
 	ctx->message += ctx->len;
 	ctx->len = 0;
 	if (!ctx->single_one_delivered) {
 		*buffer++ = 0x80;
-		space_in_chunk -= 1;
+		space_left -= 1;
 		ctx->single_one_delivered = 1;
 	}
-	if (space_in_chunk >= TOTAL_LEN_LEN) {
-		const size_t left = space_in_chunk - TOTAL_LEN_LEN;
+	if (space_left >= TOTAL_LEN) {
+		const size_t left = space_left - TOTAL_LEN;
 		size_t len = ctx->total_len;
 		int i;
 		memset(buffer, 0x00, left);
 		buffer += left;
-		buffer[7] = (uint8_t) (len << 3);
+		buffer[7] = (u_int8_t)(len << 3);
 		len >>= 5;
 		for (i = 6; i >= 0; i--) {
-			buffer[i] = (uint8_t) len;
+			buffer[i] = (u_int8_t)len;
 			len >>= 8;
 		}
-		ctx->total_len_delivered = 1;
+		ctx->complete = 1;
 	} else {
-		memset(buffer, 0x00, space_in_chunk);
+		memset(buffer, 0x00, space_left);
 	}
 	return 1;
 }
 
-void sha_transform(sha256_ctx *ctx, uint8_t hash[32], size_t len)
+void sha_transform(sha256_ctx *ctx, u_int8_t hash[32], size_t len)
 {
 	int i, j;
 	sha256_vars vars;
@@ -76,8 +76,8 @@ void sha_transform(sha256_ctx *ctx, uint8_t hash[32], size_t len)
 		chunk_cpy = ctx->chunk;
 		memset(vars.w, 0x00, sizeof vars.w);
 		for (i = 0; i < 16; i++) {
-			vars.w[i] = (uint32_t)chunk_cpy[0] << 24 | (uint32_t)chunk_cpy[1] << 16 |
-							(uint32_t)chunk_cpy[2] << 8 | (uint32_t)chunk_cpy[3];
+			vars.w[i] = (u_int32_t)chunk_cpy[0] << 24 | (u_int32_t)chunk_cpy[1] << 16 |
+							(u_int32_t)chunk_cpy[2] << 8 | (u_int32_t)chunk_cpy[3];
 			chunk_cpy += 4;
 		}
 		for (i = 16; i < 64; i++) {
@@ -107,19 +107,14 @@ void sha_transform(sha256_ctx *ctx, uint8_t hash[32], size_t len)
 		for (i = 0; i < 8; i++)
 			ctx->state[i] += w_bufs[i];
 	}
-	for (i = 0, j = 0; i < 8; i++)
-	{
-		hash[j++] = (uint8_t)(ctx->state[i] >> 24);
-		hash[j++] = (uint8_t)(ctx->state[i] >> 16);
-		hash[j++] = (uint8_t)(ctx->state[i] >> 8);
-		hash[j++] = (uint8_t)ctx->state[i];
-	}
-}		
+	for (i = 0, j = 0; i < 8; i++, j+=4)
+		SHA256_OUT(&hash[j], ctx->state[i]);
+}	
 
 void calc_hash(t_container container)
 {
 	sha256_ctx ctx;
-    uint8_t hash[32];
+    u_int8_t hash[32];
 	char *message;
 	unsigned int len;
 
