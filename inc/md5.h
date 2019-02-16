@@ -20,13 +20,11 @@
 #define S43 15
 #define S44 21
 
-typedef unsigned int MD5_u32plus;
-
 typedef struct {
-    MD5_u32plus state[4];
-    MD5_u32plus count[2];
+    u_int32_t state[4];
+    u_int32_t count[2];
     unsigned char buffer[64];
-    MD5_u32plus block[16];
+    u_int32_t block[16];
 } MD5_CTX;
 
 #define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
