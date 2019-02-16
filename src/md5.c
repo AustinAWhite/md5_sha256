@@ -20,15 +20,15 @@ void MD5_Init(MD5_CTX *ctx)
 static const void *transform(MD5_CTX *ctx, const void *data, unsigned long size)
 {
 	const unsigned char *ptr;
-	MD5_u32plus A;
-    MD5_u32plus B;
-    MD5_u32plus C;
-    MD5_u32plus D;
-	MD5_u32plus saved_A;
-    MD5_u32plus saved_B;
-    MD5_u32plus saved_C;
-    MD5_u32plus saved_D;
-
+	u_int32_t A;
+    u_int32_t B;
+    u_int32_t C;
+    u_int32_t D;
+	u_int32_t saved_A;
+    u_int32_t saved_B;
+    u_int32_t saved_C;
+    u_int32_t saved_D;
+	
 	ptr = (const unsigned char *)data;
 	A = ctx->state[0];
 	B = ctx->state[1];
@@ -124,7 +124,7 @@ static const void *transform(MD5_CTX *ctx, const void *data, unsigned long size)
 
 void MD5_Update(MD5_CTX *ctx, const void *data, unsigned long size)
 {
-	MD5_u32plus saved_lo;
+	u_int32_t saved_lo;
 	unsigned long used;
     unsigned long available;
 
