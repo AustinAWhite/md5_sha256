@@ -23,7 +23,7 @@ static void init_buf_state(sha256_ctx *ctx, const void *input, size_t len)
 	ctx->total_len_delivered = 0;
 }
 
-static int calc_chunk(uint8_t chunk[CHUNK_SIZE], sha256_ctx *ctx)
+static int calc_chunk(uint8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 {
 	size_t space_in_chunk;
 
@@ -31,18 +31,18 @@ static int calc_chunk(uint8_t chunk[CHUNK_SIZE], sha256_ctx *ctx)
 		return 0;
 	}
 	if (ctx->len >= CHUNK_SIZE) {
-		memcpy(chunk, ctx->p, CHUNK_SIZE);
+		memcpy(buffer, ctx->p, CHUNK_SIZE);
 		ctx->p += CHUNK_SIZE;
 		ctx->len -= CHUNK_SIZE;
 		return 1;
 	}
-	memcpy(chunk, ctx->p, ctx->len);
-	chunk += ctx->len;
+	memcpy(buffer, ctx->p, ctx->len);
+	buffer += ctx->len;
 	space_in_chunk = CHUNK_SIZE - ctx->len;
 	ctx->p += ctx->len;
 	ctx->len = 0;
 	if (!ctx->single_one_delivered) {
-		*chunk++ = 0x80;
+		*buffer++ = 0x80;
 		space_in_chunk -= 1;
 		ctx->single_one_delivered = 1;
 	}
@@ -50,17 +50,17 @@ static int calc_chunk(uint8_t chunk[CHUNK_SIZE], sha256_ctx *ctx)
 		const size_t left = space_in_chunk - TOTAL_LEN_LEN;
 		size_t len = ctx->total_len;
 		int i;
-		memset(chunk, 0x00, left);
-		chunk += left;
-		chunk[7] = (uint8_t) (len << 3);
+		memset(buffer, 0x00, left);
+		buffer += left;
+		buffer[7] = (uint8_t) (len << 3);
 		len >>= 5;
 		for (i = 6; i >= 0; i--) {
-			chunk[i] = (uint8_t) len;
+			buffer[i] = (uint8_t) len;
 			len >>= 8;
 		}
 		ctx->total_len_delivered = 1;
 	} else {
-		memset(chunk, 0x00, space_in_chunk);
+		memset(buffer, 0x00, space_in_chunk);
 	}
 	return 1;
 }
@@ -68,12 +68,11 @@ static int calc_chunk(uint8_t chunk[CHUNK_SIZE], sha256_ctx *ctx)
 void sha_transform(sha256_ctx *ctx, uint8_t hash[32], const void *input, size_t len)
 {
 	int i, j;
-	uint8_t chunk[64];
 	
-	while (calc_chunk(chunk, ctx)) {
+	while (calc_chunk(ctx->buffer, ctx)) {
 		uint32_t ah[8];
 		uint32_t w[64];
-		const uint8_t *p = chunk;
+		const uint8_t *p = ctx->buffer;
 		memset(w, 0x00, sizeof w);
 		for (i = 0; i < 16; i++) {
 			w[i] = (uint32_t) p[0] << 24 | (uint32_t) p[1] << 16 |
@@ -137,7 +136,7 @@ void calc_hash(t_container container)
 void sha256(t_container container)
 {
     struct stat fstat;
-	
+
     while (container.message) {
         if (container.message->content_size & IS_STR)
             calc_hash(container);
