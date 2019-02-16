@@ -16,17 +16,14 @@ static int set_flags(t_container *contain, char *arg, char *next)
     char *str;
 
     i = 0;
-    while (arg[++i])
-    {
+    while (arg[++i]) {
         if ((found = ft_chrindex(FLAGSTR, arg[i])) != -1)
             contain->flags |= flag_list[found];
-        else
-        {
+        else {
             invalid_flag(contain->hash_alg, arg[i], contain->flags);
             return (1);
         }
-        if (contain->flags & FLG_S)
-        {
+        if (contain->flags & FLG_S) {
             contain->flags |= FLG_S;
             str = ft_isprint(arg[i + 1]) ? (arg + i + 1) : (next);
             str ? NULL : arg_required(contain->hash_alg, arg[i]);
@@ -43,18 +40,15 @@ t_container parse_input(int ac, char **av)
     int i;
     t_container contain;
 
-    j = -1;
     i = 1;
     contain = (t_container){NULL, 0, NULL};
     av[1] ? NULL : no_algotithm();
-    while (dispatch_lookup[++j])
+    for (j = 0; dispatch_lookup[j]; j++)
         if (ft_strequ(dispatch_lookup[j], av[1]))
             contain.hash_alg = av[1];
     contain.hash_alg && av[1] ? NULL : invalid_alg(av[1]);
-    while (av[++i] && av[i][0] == '-' && !(contain.flags & FLG_S))
-    {
-        if (ft_strequ(av[i], "--"))
-        {
+    while (av[++i] && av[i][0] == '-' && !(contain.flags & FLG_S)) {
+        if (ft_strequ(av[i], "--")) {
             i++;
             break ;
         }
@@ -63,7 +57,7 @@ t_container parse_input(int ac, char **av)
     }
     if (contain.message && ft_strequ(av[i], contain.message->content))
         i++;
-    for ( ; i < ac ; i++)
-        append_message(&contain.message, av[i], IS_FILE);
+    while (i < ac)
+        append_message(&contain.message, av[i++], IS_FILE);
     return (contain);
 }

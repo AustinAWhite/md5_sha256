@@ -20,8 +20,7 @@ char *readfile(char *path)
 
     message = ft_strnew(1);
     fd = open(path, O_RDONLY);
-    while ((ret = read(fd, buf, READ_BUF_SIZE)) > 0)
-    {
+    while ((ret = read(fd, buf, READ_BUF_SIZE)) > 0) {
         buf[ret] = '\0';
         tmp = ft_strjoin(message, buf);
         free(message);

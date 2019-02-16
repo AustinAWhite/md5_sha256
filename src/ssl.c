@@ -9,8 +9,7 @@ void    read_stdin(t_list **message)
     t_list *new_message;
 
     str = ft_strnew(1);
-    while ((ret = read(0, &buf, READ_BUF_SIZE)))
-    {
+    while ((ret = read(0, &buf, READ_BUF_SIZE))) {
         buf[ret] = '\0';
         tmp = ft_strjoin(str, buf);
         free(str);
