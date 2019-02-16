@@ -65,14 +65,21 @@ static int calc_chunk(uint8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 	return 1;
 }
 
-void sha_transform(sha256_ctx *ctx, uint8_t hash[32], const void *input, size_t len)
+void sha_transform(sha256_ctx *ctx, uint8_t hash[32], size_t len)
 {
 	int i, j;
 	u_int32_t w_bufs[8];
-	const u_int8_t *ctxbuf_cpy; 
+	const u_int8_t *ctxbuf_cpy;
+	uint32_t w[64];
+	uint32_t s0;
+	uint32_t s1;
+	uint32_t ch;
+	uint32_t maj;
+	uint32_t temp1;
+	uint32_t temp2;
 	
 	while (calc_chunk(ctx->buffer, ctx)) {
-		uint32_t w[64];
+		
 		ctxbuf_cpy = ctx->buffer;
 		memset(w, 0x00, sizeof w);
 		for (i = 0; i < 16; i++) {
@@ -81,19 +88,19 @@ void sha_transform(sha256_ctx *ctx, uint8_t hash[32], const void *input, size_t 
 			ctxbuf_cpy += 4;
 		}
 		for (i = 16; i < 64; i++) {
-			const uint32_t s0 = SHIFT_RIGHT(w[i - 15], 7) ^ SHIFT_RIGHT(w[i - 15], 18) ^ (w[i - 15] >> 3);
-			const uint32_t s1 = SHIFT_RIGHT(w[i - 2], 17) ^ SHIFT_RIGHT(w[i - 2], 19) ^ (w[i - 2] >> 10);
+			s0 = SHIFT_RIGHT(w[i - 15], 7) ^ SHIFT_RIGHT(w[i - 15], 18) ^ (w[i - 15] >> 3);
+			s1 = SHIFT_RIGHT(w[i - 2], 17) ^ SHIFT_RIGHT(w[i - 2], 19) ^ (w[i - 2] >> 10);
 			w[i] = w[i - 16] + s0 + w[i - 7] + s1;
 		}
 		for (i = 0; i < 8; i++)
 			w_bufs[i] = ctx->state[i];
 		for (i = 0; i < 64; i++) {
-			const uint32_t s1 = SHIFT_RIGHT(w_bufs[4], 6) ^ SHIFT_RIGHT(w_bufs[4], 11) ^ SHIFT_RIGHT(w_bufs[4], 25);
-			const uint32_t ch = (w_bufs[4] & w_bufs[5]) ^ (~w_bufs[4] & w_bufs[6]);
-			const uint32_t temp1 = w_bufs[7] + s1 + ch + sha256_k[i] + w[i];
-			const uint32_t s0 = SHIFT_RIGHT(w_bufs[0], 2) ^ SHIFT_RIGHT(w_bufs[0], 13) ^ SHIFT_RIGHT(w_bufs[0], 22);
-			const uint32_t maj = (w_bufs[0] & w_bufs[1]) ^ (w_bufs[0] & w_bufs[2]) ^ (w_bufs[1] & w_bufs[2]);
-			const uint32_t temp2 = s0 + maj;
+			s1 = SHIFT_RIGHT(w_bufs[4], 6) ^ SHIFT_RIGHT(w_bufs[4], 11) ^ SHIFT_RIGHT(w_bufs[4], 25);
+			ch = (w_bufs[4] & w_bufs[5]) ^ (~w_bufs[4] & w_bufs[6]);
+			temp1 = w_bufs[7] + s1 + ch + sha256_k[i] + w[i];
+			s0 = SHIFT_RIGHT(w_bufs[0], 2) ^ SHIFT_RIGHT(w_bufs[0], 13) ^ SHIFT_RIGHT(w_bufs[0], 22);
+			maj = (w_bufs[0] & w_bufs[1]) ^ (w_bufs[0] & w_bufs[2]) ^ (w_bufs[1] & w_bufs[2]);
+			temp2 = s0 + maj;
 
 			w_bufs[7] = w_bufs[6];
 			w_bufs[6] = w_bufs[5];
@@ -130,7 +137,7 @@ void calc_hash(t_container container)
             return;
     len = ft_strlen(message);
 	init_buf_state(&ctx, message, len);
-    sha_transform(&ctx, hash, message, len);
+    sha_transform(&ctx, hash, len);
     print_hash(container, hash, 32);
 }
 
