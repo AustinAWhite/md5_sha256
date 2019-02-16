@@ -200,6 +200,7 @@ void digest(t_container container)
 void md5(t_container container)
 {
     struct stat fstat;
+	
     while (container.message) {
         if (container.message->content_size & IS_STR)
             digest(container);
