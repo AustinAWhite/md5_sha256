@@ -1,5 +1,15 @@
 #include "../inc/ssl.h"
 
+unsigned int count_commands()
+{
+    unsigned int cnt;
+
+    cnt = 0;
+    while (dispatch_funcs[cnt])
+        cnt++;
+    return (cnt);
+}
+
 char *readfile(char *path)
 {
     char *message;
@@ -41,7 +51,7 @@ void print_hash(t_container container, unsigned char hash[], unsigned int size)
     }
     if ((container.flags & FLG_P) && (container.message->content_size & P_APPEND))
         ft_putstr(container.message->content);
-    for (int i = 0; i < size; i++) {
+    for (unsigned int i = 0; i < size; i++) {
         if (hash[i] < 0xF)
             ft_putchar('0');       
         ft_putstr(ft_itoa_base(hash[i], 16));
