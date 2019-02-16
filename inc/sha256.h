@@ -8,12 +8,6 @@
 #define TOTAL_LEN 8
 #define SHIFT_RIGHT(x, n)(x >> n | x << (32 - n))
 
-#define SHA256_OUT(dst, src) \
-	(dst)[0] = (unsigned char)((src) >> 24); \
-	(dst)[1] = (unsigned char)((src) >> 16); \
-	(dst)[2] = (unsigned char)((src) >> 8); \
-	(dst)[3] = (unsigned char)(src); \
-
 typedef struct {
 	u_int32_t w[64];
 	u_int32_t s0;
