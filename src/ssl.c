@@ -25,14 +25,12 @@ void    read_stdin(t_list **message)
 int main(int ac, char **av)
 {
     int i;
-    t_container contain;
+    t_container container;
 
     i = -1;
-    contain = parse_input(ac, av);
-    if (contain.message == NULL || contain.flags & FLG_P)
-        read_stdin(&contain.message);
-    while (g_dispatch_lookup[++i])
-        if (ft_strequ(contain.hash_alg, g_dispatch_lookup[i]))
-            g_dispatch_funcs[i](contain);
+    container = parse_input(ac, av);
+    if (container.message == NULL || container.flags & FLG_P)
+        read_stdin(&container.message);
+    dispatcher(container);
     return (0);
 }
