@@ -13,7 +13,6 @@ static int set_flags(t_container *contain, char *arg, char *next)
 {
     int i;
     int found;
-    t_list *message;
     char *str;
 
     i = 0;
@@ -43,14 +42,13 @@ t_container parse_input(int ac, char **av)
     int j;
     int i;
     t_container contain;
-    t_list *file;
 
     j = -1;
     i = 1;
     contain = (t_container){NULL, 0, NULL};
     av[1] ? NULL : no_algotithm();
-    while (g_dispatch_lookup[++j])
-        if (ft_strequ(g_dispatch_lookup[j], av[1]))
+    while (dispatch_lookup[++j])
+        if (ft_strequ(dispatch_lookup[j], av[1]))
             contain.hash_alg = av[1];
     contain.hash_alg && av[1] ? NULL : invalid_alg(av[1]);
     while (av[++i] && av[i][0] == '-' && !(contain.flags & FLG_S))
