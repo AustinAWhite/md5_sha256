@@ -152,7 +152,7 @@ void md5_chunk(md5_ctx *ctx, const void *message, unsigned long size)
 	ft_memcpy(ctx->buffer, message, size);
 }
 
-void md5_final(unsigned char *result, md5_ctx *ctx)
+void md5_final(unsigned char *digest, md5_ctx *ctx)
 {
 	unsigned long used;
     unsigned long available;
@@ -171,10 +171,10 @@ void md5_final(unsigned char *result, md5_ctx *ctx)
 	OUT(&ctx->buffer[56], ctx->count[0])
 	OUT(&ctx->buffer[60], ctx->count[1])
 	md5_transform(ctx, ctx->buffer, 64);
-	OUT(&result[0], ctx->state[0])
-	OUT(&result[4], ctx->state[1])
-	OUT(&result[8], ctx->state[2])
-	OUT(&result[12], ctx->state[3])
+	OUT(&digest[0], ctx->state[0])
+	OUT(&digest[4], ctx->state[1])
+	OUT(&digest[8], ctx->state[2])
+	OUT(&digest[12], ctx->state[3])
 	ft_memset(ctx, 0, sizeof(*ctx));
 }
 
