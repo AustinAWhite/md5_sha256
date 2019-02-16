@@ -6,7 +6,7 @@ Attribution:
     openwall.com - public domain sorouce code
 */
 
-void MD5_Init(md5_ctx *ctx)
+void md5_init_ctx(md5_ctx *ctx)
 {
 	ctx->state[0] = md5_a0;
 	ctx->state[1] = md5_b0;
@@ -17,7 +17,7 @@ void MD5_Init(md5_ctx *ctx)
 	ctx->count[1] = 0;
 }
 
-static const void *transform(md5_ctx *ctx, const void *data, unsigned long size)
+static const void *md5_transform(md5_ctx *ctx, const void *data, unsigned long size)
 {
 	const unsigned char *ptr;
 	u_int32_t A;
@@ -122,7 +122,7 @@ static const void *transform(md5_ctx *ctx, const void *data, unsigned long size)
 	return (ptr);
 }
 
-void MD5_Update(md5_ctx *ctx, const void *data, unsigned long size)
+void md5_chunk(md5_ctx *ctx, const void *message, unsigned long size)
 {
 	u_int32_t saved_lo;
 	unsigned long used;
@@ -137,22 +137,22 @@ void MD5_Update(md5_ctx *ctx, const void *data, unsigned long size)
 		available = 64 - used;
 
 		if (size < available) {
-			ft_memcpy(&ctx->buffer[used], data, size);
+			ft_memcpy(&ctx->buffer[used], message, size);
 			return;
 		}
-		ft_memcpy(&ctx->buffer[used], data, available);
-		data = (const unsigned char *)data + available;
+		ft_memcpy(&ctx->buffer[used], message, available);
+		message = (const unsigned char *)message + available;
 		size -= available;
-		transform(ctx, ctx->buffer, 64);
+		md5_transform(ctx, ctx->buffer, 64);
 	}
 	if (size >= 64) {
-		data = transform(ctx, data, size & ~(unsigned long)0x3f);
+		message = md5_transform(ctx, message, size & ~(unsigned long)0x3f);
 		size &= 0x3f;
 	}
-	ft_memcpy(ctx->buffer, data, size);
+	ft_memcpy(ctx->buffer, message, size);
 }
 
-void MD5_Final(unsigned char *result, md5_ctx *ctx)
+void md5_final(unsigned char *result, md5_ctx *ctx)
 {
 	unsigned long used;
     unsigned long available;
@@ -162,7 +162,7 @@ void MD5_Final(unsigned char *result, md5_ctx *ctx)
 	available = 64 - used;
 	if (available < 8) {
 		ft_memset(&ctx->buffer[used], 0, available);
-		transform(ctx, ctx->buffer, 64);
+		md5_transform(ctx, ctx->buffer, 64);
 		used = 0;
 		available = 64;
 	}
@@ -170,7 +170,7 @@ void MD5_Final(unsigned char *result, md5_ctx *ctx)
 	ctx->count[0] <<= 3;
 	OUT(&ctx->buffer[56], ctx->count[0])
 	OUT(&ctx->buffer[60], ctx->count[1])
-	transform(ctx, ctx->buffer, 64);
+	md5_transform(ctx, ctx->buffer, 64);
 	OUT(&result[0], ctx->state[0])
 	OUT(&result[4], ctx->state[1])
 	OUT(&result[8], ctx->state[2])
@@ -191,9 +191,9 @@ void digest(t_container container)
         if ((message = readfile(container.message->content)) == NULL)
             return;
     len = ft_strlen(message);
-	MD5_Init (&ctx);
-	MD5_Update (&ctx, message, len);
-	MD5_Final (digest, &ctx);
+	md5_init_ctx(&ctx);
+	md5_chunk(&ctx, message, len);
+	md5_final(digest, &ctx);
     print_hash(container, digest, 16);
 }
 
@@ -207,12 +207,14 @@ void md5(t_container container)
             if (access(container.message->content, F_OK) != -1) {
                 stat(container.message->content, &fstat);
                 if (S_ISDIR(fstat.st_mode))
-                    file_error("md5", container.message->content, "Is a directory");
+                    file_error("md5", container.message->content,
+										"Is a directory");
                 else
                     digest(container);
             }
             else
-                file_error("md5", container.message->content, "No such file or directory");
+                file_error("md5", container.message->content,
+										"No such file or directory");
         }
         container.message = container.message->next;
     }
