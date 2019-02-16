@@ -109,9 +109,9 @@ void sha_transform(sha256_ctx *ctx, u_int8_t hash[32], size_t len)
 	}
 	for (i = 0, j = 0; i < 8; i++)
     {
-         hash[j++] = (uint8_t) (ctx->state[i] >> 24);
-         hash[j++] = (uint8_t) (ctx->state[i] >> 16);
-         hash[j++] = (uint8_t) (ctx->state[i] >> 8);
+        hash[j++] = (uint8_t) (ctx->state[i] >> 24);
+        hash[j++] = (uint8_t) (ctx->state[i] >> 16);
+        hash[j++] = (uint8_t) (ctx->state[i] >> 8);
         hash[j++] = (uint8_t) ctx->state[i];
     }
 }	
