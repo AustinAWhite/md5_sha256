@@ -122,7 +122,7 @@ static const void *md5_transform(md5_ctx *ctx, const void *data, unsigned long s
 	return (ptr);
 }
 
-void md5_chunk(md5_ctx *ctx, const void *message, unsigned long size)
+void md5_update(md5_ctx *ctx, const void *message, unsigned long size)
 {
 	u_int32_t saved_lo;
 	unsigned long used;
@@ -192,7 +192,7 @@ void digest(t_container container)
             return;
     len = ft_strlen(message);
 	md5_init_ctx(&ctx);
-	md5_chunk(&ctx, message, len);
+	md5_update(&ctx, message, len);
 	md5_final(digest, &ctx);
     print_hash(container, digest, 16);
 }
