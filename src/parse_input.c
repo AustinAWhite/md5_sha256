@@ -38,26 +38,26 @@ t_container parse_input(int ac, char **av)
 {
     int j;
     int i;
-    t_container contain;
+    t_container container;
 
     i = 1;
-    contain = (t_container){NULL, 0, NULL};
+    container = (t_container){NULL, 0, NULL};
     av[1] ? NULL : no_algotithm();
     for (j = 0; dispatch_lookup[j]; j++)
         if (ft_strequ(dispatch_lookup[j], av[1]))
-            contain.hash_alg = av[1];
-    contain.hash_alg && av[1] ? NULL : invalid_alg(av[1]);
-    while (av[++i] && av[i][0] == '-' && !(contain.flags & FLG_S)) {
+            container.hash_alg = av[1];
+    container.hash_alg && av[1] ? NULL : invalid_alg(av[1]);
+    while (av[++i] && av[i][0] == '-' && !(container.flags & FLG_S)) {
         if (ft_strequ(av[i], "--")) {
             i++;
             break ;
         }
-        else if (set_flags(&contain, av[i], av[i + 1]))
-            return (contain);
+        else if (set_flags(&container, av[i], av[i + 1]))
+            return (container);
     }
-    if (contain.message && ft_strequ(av[i], contain.message->content))
+    if (container.message && ft_strequ(av[i], container.message->content))
         i++;
     while (i < ac)
-        append_message(&contain.message, av[i++], IS_FILE);
-    return (contain);
+        append_message(&container.message, av[i++], IS_FILE);
+    return (container);
 }
