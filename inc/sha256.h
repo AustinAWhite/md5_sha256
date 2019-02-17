@@ -20,10 +20,9 @@ typedef struct {
 
 typedef struct {
 	u_int32_t state[8];
+	u_int32_t count[2];
 	u_int8_t chunk[CHUNK_SIZE];
 	const uint8_t *message;
-	size_t len;
-	size_t total_len;
 	int put_one;
 	int complete;
 } sha256_ctx;

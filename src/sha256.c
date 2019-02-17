@@ -18,8 +18,8 @@ static void init_buf_state(sha256_ctx *ctx, const void *message, size_t len)
 	ctx->state[6] = sha256_h6;
 	ctx->state[7] = sha256_h7;
 	ctx->message = message;
-	ctx->len = len;
-	ctx->total_len = len;
+	ctx->count[0] = len;
+	ctx->count[1] = len;
 	ctx->put_one = 0;
 	ctx->complete = 0;
 }
@@ -28,22 +28,22 @@ static int calc_chunk(u_int8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 {
 	size_t space_left;
 	size_t left;
-	size_t len;
+	u_int32_t len;
 
 	if (ctx->complete) {
 		return 0;
 	}
-	if (ctx->len >= CHUNK_SIZE) {
+	if (ctx->count[0] >= CHUNK_SIZE) {
 		memcpy(buffer, ctx->message, CHUNK_SIZE);
 		ctx->message += CHUNK_SIZE;
-		ctx->len -= CHUNK_SIZE;
+		ctx->count[0] -= CHUNK_SIZE;
 		return 1;
 	}
-	memcpy(buffer, ctx->message, ctx->len);
-	buffer += ctx->len;
-	space_left = CHUNK_SIZE - ctx->len;
-	ctx->message += ctx->len;
-	ctx->len = 0;
+	memcpy(buffer, ctx->message, ctx->count[0]);
+	buffer += ctx->count[0];
+	space_left = CHUNK_SIZE - ctx->count[0];
+	ctx->message += ctx->count[0];
+	ctx->count[0] = 0;
 	if (!ctx->put_one) {
 		*buffer++ = 0x80;
 		space_left -= 1;
@@ -51,7 +51,7 @@ static int calc_chunk(u_int8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 	}
 	if (space_left >= TOTAL_LEN) {
 		left = space_left - TOTAL_LEN;
-		len = ctx->total_len;
+		len = ctx->count[1];
 		memset(buffer, 0x00, left);
 		buffer += left;
 		buffer[7] = (u_int8_t)(len << 3);
