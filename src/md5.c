@@ -137,10 +137,10 @@ void md5_update(md5_ctx *ctx, const void *message, unsigned long size)
 		available = 64 - used;
 
 		if (size < available) {
-			ft_memcpy(&ctx->buffer[used], message, size);
+			memcpy(&ctx->buffer[used], message, size);
 			return;
 		}
-		ft_memcpy(&ctx->buffer[used], message, available);
+		memcpy(&ctx->buffer[used], message, available);
 		message = (const unsigned char *)message + available;
 		size -= available;
 		md5_transform(ctx, ctx->buffer, 64);
@@ -149,7 +149,7 @@ void md5_update(md5_ctx *ctx, const void *message, unsigned long size)
 		message = md5_transform(ctx, message, size & ~(unsigned long)0x3f);
 		size &= 0x3f;
 	}
-	ft_memcpy(ctx->buffer, message, size);
+	memcpy(ctx->buffer, message, size);
 }
 
 void md5_final(unsigned char *digest, md5_ctx *ctx)
@@ -161,12 +161,12 @@ void md5_final(unsigned char *digest, md5_ctx *ctx)
 	ctx->buffer[used++] = 0x80;
 	available = 64 - used;
 	if (available < 8) {
-		ft_memset(&ctx->buffer[used], 0, available);
+		memset(&ctx->buffer[used], 0, available);
 		md5_transform(ctx, ctx->buffer, 64);
 		used = 0;
 		available = 64;
 	}
-	ft_memset(&ctx->buffer[used], 0, available - 8);
+	memset(&ctx->buffer[used], 0, available - 8);
 	ctx->count[0] <<= 3;
 	MD_OUT(&ctx->buffer[56], ctx->count[0])
 	MD_OUT(&ctx->buffer[60], ctx->count[1])
@@ -175,7 +175,7 @@ void md5_final(unsigned char *digest, md5_ctx *ctx)
 	MD_OUT(&digest[4], ctx->state[1])
 	MD_OUT(&digest[8], ctx->state[2])
 	MD_OUT(&digest[12], ctx->state[3])
-	ft_memset(ctx, 0, sizeof(*ctx));
+	memset(ctx, 0, sizeof(*ctx));
 }
 
 void md5(t_container container)

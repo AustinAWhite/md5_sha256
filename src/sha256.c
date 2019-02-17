@@ -19,13 +19,15 @@ static void init_buf_state(sha256_ctx *ctx, const void *message, size_t len)
 	ctx->message = message;
 	ctx->len = len;
 	ctx->total_len = len;
-	ctx->single_one_delivered = 0;
+	ctx->put_one = 0;
 	ctx->complete = 0;
 }
 
 static int calc_chunk(u_int8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 {
 	size_t space_left;
+	size_t left;
+	size_t len;
 
 	if (ctx->complete) {
 		return 0;
@@ -41,27 +43,26 @@ static int calc_chunk(u_int8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 	space_left = CHUNK_SIZE - ctx->len;
 	ctx->message += ctx->len;
 	ctx->len = 0;
-	if (!ctx->single_one_delivered) {
+	if (!ctx->put_one) {
 		*buffer++ = 0x80;
 		space_left -= 1;
-		ctx->single_one_delivered = 1;
+		ctx->put_one = 1;
 	}
 	if (space_left >= TOTAL_LEN) {
-		const size_t left = space_left - TOTAL_LEN;
-		size_t len = ctx->total_len;
-		int i;
+		left = space_left - TOTAL_LEN;
+		len = ctx->total_len;
 		memset(buffer, 0x00, left);
 		buffer += left;
 		buffer[7] = (u_int8_t)(len << 3);
 		len >>= 5;
-		for (i = 6; i >= 0; i--) {
+		for (int i = 6; i >= 0; i--) {
 			buffer[i] = (u_int8_t)len;
 			len >>= 8;
 		}
 		ctx->complete = 1;
-	} else {
-		memset(buffer, 0x00, space_left);
 	}
+	else
+		memset(buffer, 0x00, space_left);
 	return 1;
 }
 
@@ -107,8 +108,7 @@ void sha_transform(sha256_ctx *ctx, u_int8_t hash[32])
 		for (i = 0; i < 8; i++)
 			ctx->state[i] += w_bufs[i];
 	}
-	for (i = 0, j = 0; i < 8; i++)
-    {
+	for (i = 0, j = 0; i < 8; i++) {
         hash[j++] = (uint8_t) (ctx->state[i] >> 24);
         hash[j++] = (uint8_t) (ctx->state[i] >> 16);
         hash[j++] = (uint8_t) (ctx->state[i] >> 8);

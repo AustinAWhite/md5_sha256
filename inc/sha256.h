@@ -24,7 +24,7 @@ typedef struct {
 	const uint8_t *message;
 	size_t len;
 	size_t total_len;
-	int single_one_delivered;
+	int put_one;
 	int complete;
 } sha256_ctx;
 
