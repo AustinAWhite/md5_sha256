@@ -1,4 +1,5 @@
 #include "../inc/ssl.h"
+#include "../inc/dispatch.h"
 
 static void print_available()
 {

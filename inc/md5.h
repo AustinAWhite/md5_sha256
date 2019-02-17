@@ -1,7 +1,7 @@
 #ifndef _MD5_
 #define _MD5_
 
-#include "./ssl.h"
+//#include "./ssl.h"
 
 #define S11 7
 #define S12 12

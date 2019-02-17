@@ -3,9 +3,6 @@
 
 #include "../libft/libft.h"
 #include "./global.h"
-#include "./md5.h"
-#include "./sha256.h"
-#include "./dispatch.h"
 #include <sys/stat.h>
 #include <inttypes.h>
 #include <stdio.h>

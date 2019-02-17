@@ -1,4 +1,5 @@
 #include "../inc/ssl.h"
+#include "../inc/dispatch.h"
 
 static void append_message(t_list **list, char *message, unsigned int type)
 {

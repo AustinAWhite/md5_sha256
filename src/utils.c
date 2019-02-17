@@ -1,4 +1,5 @@
 #include "../inc/ssl.h"
+#include "../inc/dispatch.h"
 
 unsigned int count_commands()
 {
