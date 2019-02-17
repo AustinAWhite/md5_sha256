@@ -1,7 +1,6 @@
 #ifndef _DISPATCH_
 #define _DISPATCH_
 
-#include "./ssl.h"
 #include "./md5.h"
 #include "./sha256.h"
 #include <string.h>

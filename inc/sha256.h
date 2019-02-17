@@ -1,7 +1,7 @@
-#ifndef _SHA2_
-#define _SHA2_
+#ifndef _SHA_
+#define _SHA_
 
-#include "./ssl.h"
+#include "./global.h"
 #include <inttypes.h>
 
 #define CHUNK_SIZE 64
