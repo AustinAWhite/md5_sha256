@@ -5,7 +5,7 @@
 #include "./sha256.h"
 #include <string.h>
 
-static void  (*dispatch_funcs[])(t_container ssl) = {
+static void  (*dispatch_funcs[])(t_container ssl, char *input) = {
     &md5,
     &sha256,
 };

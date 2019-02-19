@@ -74,7 +74,7 @@ enum md5_buf_init {
     md5_d0 = (uint32_t)0x10325476
 };
 
-void        md5(t_container container);
+void        md5(t_container container, char *input);
 void        move_data(u_int32_t *arr1, u_int32_t *arr2);
 const void  *md5_transform(md5_ctx *ctx,
                         const void *data, unsigned long size);

@@ -1,6 +1,34 @@
 #include "../inc/ssl.h"
 #include "../inc/dispatch.h"
 
+void        print_usage()
+{
+    ft_putstr_fd("usage: ft_ssl command", STDERR_FILENO);
+    ft_putendl_fd(" [command opts] [command args]", STDERR_FILENO);
+    exit(EXIT_FAILURE);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 static void print_available()
 {
     int i;
@@ -12,19 +40,6 @@ static void print_available()
         ft_putstr_fd("\t", STDERR_FILENO);
         ft_putendl_fd(dispatch_lookup[i], STDERR_FILENO);
     }
-}
-
-void        print_usage(char *hash_alg)
-{
-    int i;
-
-    i = -1;
-    while (dispatch_lookup[++i])
-        if (ft_strequ(dispatch_lookup[i], hash_alg))
-        {
-            ft_putendl_fd(dispatch_usage[i], STDERR_FILENO);
-            break ;
-        }
 }
 
 void        arg_required(char *hash_alg, char c)

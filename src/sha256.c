@@ -7,7 +7,7 @@ Attribution:
     github.com/amosnier
 */
 
-static void init_buf_state(sha256_ctx *ctx, const void *message, size_t len)
+static void init_buf_state(sha256_ctx *ctx, const void *input, size_t len)
 {
 	ctx->state[0] = sha256_h0;
 	ctx->state[1] = sha256_h1;
@@ -17,7 +17,7 @@ static void init_buf_state(sha256_ctx *ctx, const void *message, size_t len)
 	ctx->state[5] = sha256_h5;
 	ctx->state[6] = sha256_h6;
 	ctx->state[7] = sha256_h7;
-	ctx->message = message;
+	ctx->message = input;
 	ctx->count[0] = len;
 	ctx->count[1] = len;
 	ctx->put_one = 0;
@@ -117,20 +117,20 @@ void sha_transform(sha256_ctx *ctx, u_int8_t hash[32])
     }
 }	
 
-void sha256(t_container container)
+void sha256(t_container container, char *input)
 {
 	sha256_ctx ctx;
     u_int8_t hash[32];
 	char *message;
 	unsigned int len;
 
-    if (container.message->content_size & IS_STR)
-        message = container.message->content;
+    if (container.info & IS_STR)
+        message = input;
     else
-        if ((message = readfile(container.message->content)) == NULL)
+        if ((message = readfile(input)) == NULL)
             return;
     len = ft_strlen(message);
 	init_buf_state(&ctx, message, len);
     sha_transform(&ctx, hash);
-    print_hash(container, hash, 32);
+    print_hash(container, hash, 32, input);
 }

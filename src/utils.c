@@ -41,38 +41,38 @@ char *readfile(char *path)
     return (message);
 }
 
-void print_hash(t_container container, unsigned char hash[], unsigned int size)
+void print_hash(t_container container, unsigned char hash[], unsigned int size, char *input)
 {
-    if (!(container.flags & FLG_Q) && !(container.flags & FLG_R) && !(container.message->content_size & P_APPEND)) {
-        if (container.message->content_size & IS_STR) {
-            ft_putstr(container.hash_alg);
+    if (!(container.info & FLG_Q) && !(container.info & FLG_R) && !(container.info & FROM_STDIN)) {
+        if (container.info & IS_STR) {
+            ft_putstr(container.cmd);
             ft_putstr(" (\"");
-            ft_putstr(container.message->content);
+            ft_putstr(input);
             ft_putstr("\") = ");
         }
-        else if (container.message->content_size & IS_FILE) {
-            ft_putstr(container.hash_alg);
+        else if (container.info & IS_FILE) {
+            ft_putstr(container.cmd);
             ft_putstr(" (");
-            ft_putstr(container.message->content);
+            ft_putstr(input);
             ft_putstr(") = ");
         }
     }
-    if ((container.flags & FLG_P) && (container.message->content_size & P_APPEND))
-        ft_putstr(container.message->content);
+    if ((container.info & FLG_P) && (container.info & FROM_STDIN))
+        ft_putstr(input);
     for (unsigned int i = 0; i < size; i++) {
         if (hash[i] <= 0xF)
             ft_putchar('0');       
         ft_putstr(ft_itoa_base(hash[i], 16));
     }
-    if (container.flags & FLG_R && !(container.message->content_size & P_APPEND) && !(container.flags & FLG_Q)) {
-        if (container.message->content_size & IS_STR) {
+    if (container.info & FLG_R && !(container.info & FROM_STDIN) && !(container.info & FLG_Q)) {
+        if (container.info & IS_STR) {
             ft_putstr(" \"");
-            ft_putstr(container.message->content);
+            ft_putstr(input);
             ft_putstr("\"");
         }
-        else if (container.message->content_size & IS_FILE) {
+        else if (container.info & IS_FILE) {
             ft_putstr(" ");
-            ft_putstr(container.message->content);
+            ft_putstr(input);
         }
     }
     ft_putendl("");

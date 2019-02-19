@@ -5,7 +5,7 @@
 
 typedef struct          s_container
 {
-    char                *hash_alg;
+    char                *cmd;
     uint8_t             info;
 }                       t_container;
 

@@ -77,21 +77,19 @@ void md5_final(unsigned char *digest, md5_ctx *ctx)
 	memset(ctx, 0, sizeof(*ctx));
 }
 
-void md5(t_container container)
+void md5(t_container container, char *input)
 {
     md5_ctx ctx;
 	u_int8_t digest[16];
     char *message;
-	unsigned int len;
 
-    if (container.message->content_size & IS_STR)
-        message = container.message->content;
+    if (container.info & IS_STR)
+        message = input;
     else
-        if ((message = readfile(container.message->content)) == NULL)
+        if ((message = readfile(input)) == NULL)
             return;
-    len = ft_strlen(message);
 	md5_init_ctx(&ctx);
-	md5_update(&ctx, message, len);
+	md5_update(&ctx, message, ft_strlen(message));
 	md5_final(digest, &ctx);
-    print_hash(container, digest, 16);
+    print_hash(container, digest, 16, input);
 }

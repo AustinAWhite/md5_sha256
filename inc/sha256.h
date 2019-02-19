@@ -57,6 +57,6 @@ enum sha256_buf_init {
 	sha256_h7 = (u_int32_t)0x5be0cd19
 };
 
-void             sha256(t_container container);
+void             sha256(t_container container, char *input);
 
 #endif
