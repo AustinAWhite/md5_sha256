@@ -41,36 +41,36 @@ char *readfile(char *path)
     return (message);
 }
 
-void print_hash(t_container container, unsigned char hash[], unsigned int size, char *input)
+void    print_hash(int cmd_idx, char *input, u_int8_t info, unsigned char hash[], unsigned int size)
 {
-    if (!(container.info & FLG_Q) && !(container.info & FLG_R) && !(container.info & FROM_STDIN)) {
-        if (container.info & IS_STR) {
-            ft_putstr(container.cmd);
+    if (!(info & FLG_Q) && !(info & FLG_R) && !(info & FROM_STDIN)) {
+        if (info & IS_STR) {
+            ft_putstr(dispatch_lookup[cmd_idx]);
             ft_putstr(" (\"");
             ft_putstr(input);
             ft_putstr("\") = ");
         }
-        else if (container.info & IS_FILE) {
-            ft_putstr(container.cmd);
+        else if (info & IS_FILE) {
+            ft_putstr(dispatch_lookup[cmd_idx]);
             ft_putstr(" (");
             ft_putstr(input);
             ft_putstr(") = ");
         }
     }
-    if ((container.info & FLG_P) && (container.info & FROM_STDIN))
+    if (info & FLG_P && info & FROM_STDIN)
         ft_putstr(input);
     for (unsigned int i = 0; i < size; i++) {
         if (hash[i] <= 0xF)
             ft_putchar('0');       
         ft_putstr(ft_itoa_base(hash[i], 16));
     }
-    if (container.info & FLG_R && !(container.info & FROM_STDIN) && !(container.info & FLG_Q)) {
-        if (container.info & IS_STR) {
+    if (info & FLG_R && !(info & FROM_STDIN) && !(info & FLG_Q)) {
+        if (info & IS_STR) {
             ft_putstr(" \"");
             ft_putstr(input);
             ft_putstr("\"");
         }
-        else if (container.info & IS_FILE) {
+        else if (info & IS_FILE) {
             ft_putstr(" ");
             ft_putstr(input);
         }

@@ -2,7 +2,6 @@
 #define _SSL_
 
 #include "../libft/libft.h"
-#include "./global.h"
 #include <sys/stat.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -14,7 +13,7 @@
 #define FROM_STDIN 0x10
 #define IS_STR 0x20
 #define IS_FILE 0x40
-#define FLAGSTR "pqrs"
+#define ALL_FLAGS "pqrs"
 #define READ_BUF_SIZE 4096
 #define READ_FILE_SIZE 4096
 
@@ -23,17 +22,19 @@ static unsigned int flag_list[] = {
 };
 
 void            print_usage();
+void            file_error(const char *cmd, char *input, char *err);
+void            error_cmd(char *cmd);
 
 void            invalid_alg(char *alg);
 void            no_algotithm();
-void            invalid_flag(char *hash_alg, char c, uint8_t flags);
-void            arg_required(char *hash_alg, char c);
-void            file_error(char *hash_alg, char *command, char *err);
+void            invalid_flag(char invalid);
+void            arg_required(char c);
 
-void            dispatcher(t_container container, char *input);
+
+void            dispatcher(int cmd_idx, u_int8_t type, char *input);
 
 char            *readfile(char *path);
-void            print_hash(t_container container, unsigned char hash[], unsigned int size, char *input);
+void            print_hash(int cmd_idx, char *input, u_int8_t type, unsigned char hash[], unsigned int size);
 unsigned int    count_commands();
 void            move_data(u_int32_t *arr1, u_int32_t *arr2);
 

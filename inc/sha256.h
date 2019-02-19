@@ -1,7 +1,6 @@
 #ifndef _SHA_
 #define _SHA_
 
-#include "./global.h"
 #include <inttypes.h>
 
 #define CHUNK_SIZE 64
@@ -57,6 +56,6 @@ enum sha256_buf_init {
 	sha256_h7 = (u_int32_t)0x5be0cd19
 };
 
-void             sha256(t_container container, char *input);
+void             sha256(char *input, int cmd_idx, u_int8_t type);
 
 #endif

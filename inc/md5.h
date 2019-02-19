@@ -1,7 +1,6 @@
 #ifndef _MD5_
 #define _MD5_
 
-#include "./global.h"
 #include <inttypes.h>
 
 #define S11 7
@@ -74,7 +73,7 @@ enum md5_buf_init {
     md5_d0 = (uint32_t)0x10325476
 };
 
-void        md5(t_container container, char *input);
+void        md5(char *input, int cmd_idx, u_int8_t type);
 void        move_data(u_int32_t *arr1, u_int32_t *arr2);
 const void  *md5_transform(md5_ctx *ctx,
                         const void *data, unsigned long size);

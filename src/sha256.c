@@ -117,14 +117,14 @@ void sha_transform(sha256_ctx *ctx, u_int8_t hash[32])
     }
 }	
 
-void sha256(t_container container, char *input)
+void sha256(char *input, int cmd_idx, u_int8_t info)
 {
 	sha256_ctx ctx;
     u_int8_t hash[32];
 	char *message;
 	unsigned int len;
 
-    if (container.info & IS_STR)
+    if (info & IS_STR)
         message = input;
     else
         if ((message = readfile(input)) == NULL)
@@ -132,5 +132,5 @@ void sha256(t_container container, char *input)
     len = ft_strlen(message);
 	init_buf_state(&ctx, message, len);
     sha_transform(&ctx, hash);
-    print_hash(container, hash, 32, input);
+    print_hash(cmd_idx, input, info, hash, 32);
 }
