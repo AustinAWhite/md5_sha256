@@ -6,8 +6,7 @@
 typedef struct          s_container
 {
     char                *hash_alg;
-    uint8_t             flags;
-    t_list              *message;
+    uint8_t             info;
 }                       t_container;
 
 #endif

@@ -34,5 +34,6 @@ void            dispatcher(t_container container);
 char            *readfile(char *path);
 void            print_hash(t_container container, unsigned char hash[], unsigned int size);
 unsigned int    count_commands();
+void            move_data(u_int32_t *arr1, u_int32_t *arr2);
 
 #endif

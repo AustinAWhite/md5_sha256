@@ -4,7 +4,6 @@
 #include "./global.h"
 #include <inttypes.h>
 
-
 #define S11 7
 #define S12 12
 #define S13 17
@@ -32,12 +31,6 @@ typedef struct {
 #define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
 #define GET(n) SET(n)
 
-#define F(x, y, z)		((z) ^ ((x) & ((y) ^ (z))))
-#define G(x, y, z)		((y) ^ ((z) & ((x) ^ (y))))
-#define H(x, y, z)		(((x) ^ (y)) ^ (z))
-#define H2(x, y, z)		((x) ^ ((y) ^ (z)))
-#define I(x, y, z)		((y) ^ ((x) | ~(z)))
-
 #define STEP(f, a, b, c, d, x, t, s) \
 	(a) += f((b), (c), (d)) + (x) + (t); \
 	(a) = (((a) << (s)) | (((a) & 0xffffffff) >> (32 - (s)))); \
@@ -48,6 +41,12 @@ typedef struct {
 	(dst)[1] = (unsigned char)((src) >> 8); \
 	(dst)[2] = (unsigned char)((src) >> 16); \
 	(dst)[3] = (unsigned char)((src) >> 24);
+
+#define F(x, y, z)		((z) ^ ((x) & ((y) ^ (z))))
+#define G(x, y, z)		((y) ^ ((z) & ((x) ^ (y))))
+#define H(x, y, z)		(((x) ^ (y)) ^ (z))
+#define H2(x, y, z)		((x) ^ ((y) ^ (z)))
+#define I(x, y, z)		((y) ^ ((x) | ~(z)))
 
 static uint32_t md5_k[64] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
@@ -76,5 +75,8 @@ enum md5_buf_init {
 };
 
 void        md5(t_container container);
+void        move_data(u_int32_t *arr1, u_int32_t *arr2);
+const void  *md5_transform(md5_ctx *ctx,
+                        const void *data, unsigned long size);
 
 #endif

@@ -1,6 +1,14 @@
 #include "../inc/ssl.h"
 #include "../inc/dispatch.h"
 
+void move_data(u_int32_t *arr1, u_int32_t *arr2)
+{
+	arr1[0] = arr2[0];
+	arr1[1] = arr2[1];
+	arr1[2] = arr2[2];
+	arr1[3] = arr2[3];
+}
+
 unsigned int count_commands()
 {
     unsigned int cnt;
@@ -52,7 +60,7 @@ void print_hash(t_container container, unsigned char hash[], unsigned int size)
     if ((container.flags & FLG_P) && (container.message->content_size & P_APPEND))
         ft_putstr(container.message->content);
     for (unsigned int i = 0; i < size; i++) {
-        if (hash[i] < 0xF)
+        if (hash[i] <= 0xF)
             ft_putchar('0');       
         ft_putstr(ft_itoa_base(hash[i], 16));
     }
