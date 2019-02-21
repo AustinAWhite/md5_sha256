@@ -27,6 +27,8 @@ typedef struct {
     u_int32_t block[16];
 } md5_ctx;
 
+extern const unsigned char *ptr;
+
 #define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
 #define GET(n) SET(n)
 

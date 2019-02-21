@@ -1,27 +1,60 @@
 #include "../inc/ssl.h"
 #include "../inc/md5.h"
 
-static void round1(const unsigned char *ptr, u_int32_t *buf)
+#define LEFT_ROT(x, c)(x << c) | (x >> (32-c))
+
+#define STEP(f, a, b, c, d, x, t, s) \
+	(a) += f((b), (c), (d)) + (x) + (t); \
+	(a) = (((a) << (s)) | (((a) & 0xffffffff) >> (32 - (s)))); \
+	(a) += (b);
+
+const unsigned char *ptr;
+
+void        round1_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
-	STEP(F, buf[0], buf[1], buf[2], buf[3], SET( 0), md5_k[ 0], S11)
-    STEP(F, buf[3], buf[0], buf[1], buf[2], SET( 1), md5_k[ 1], S12)
-    STEP(F, buf[2], buf[3], buf[0], buf[1], SET( 2), md5_k[ 2], S13)
-    STEP(F, buf[1], buf[2], buf[3], buf[0], SET( 3), md5_k[ 3], S14)
-    STEP(F, buf[0], buf[1], buf[2], buf[3], SET( 4), md5_k[ 4], S11)
-    STEP(F, buf[3], buf[0], buf[1], buf[2], SET( 5), md5_k[ 5], S12)
-    STEP(F, buf[2], buf[3], buf[0], buf[1], SET( 6), md5_k[ 6], S13)
-    STEP(F, buf[1], buf[2], buf[3], buf[0], SET( 7), md5_k[ 7], S14)
-    STEP(F, buf[0], buf[1], buf[2], buf[3], SET( 8), md5_k[ 8], S11)
-    STEP(F, buf[3], buf[0], buf[1], buf[2], SET( 9), md5_k[ 9], S12)
-    STEP(F, buf[2], buf[3], buf[0], buf[1], SET(10), md5_k[10], S13)
-    STEP(F, buf[1], buf[2], buf[3], buf[0], SET(11), md5_k[11], S14)
-    STEP(F, buf[0], buf[1], buf[2], buf[3], SET(12), md5_k[12], S11)
-    STEP(F, buf[3], buf[0], buf[1], buf[2], SET(13), md5_k[13], S12)
-    STEP(F, buf[2], buf[3], buf[0], buf[1], SET(14), md5_k[14], S13)
-    STEP(F, buf[1], buf[2], buf[3], buf[0], SET(15), md5_k[15], S14)
+    u_int32_t R;
+    u_int32_t g;
+
+    R = F((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + SET(x);
+    buf[0] = buf[3];
+    buf[3] = buf[2];
+    buf[2] = buf[1];
+    buf[1] += LEFT_ROT(R, s);
 }
 
-static void round2(const unsigned char *ptr, u_int32_t *buf)
+void        round2_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
+{
+    u_int32_t R;
+    u_int32_t g;
+
+    R = G((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + SET(x);
+    buf[0] = buf[3];
+    buf[3] = buf[2];
+    buf[2] = buf[1];
+    buf[1] += LEFT_ROT(R, s);
+}
+
+static void round1( u_int32_t *buf)
+{   
+    round1_logic(buf, 0, md5_k[ 0], S11);
+    round1_logic(buf, 1, md5_k[ 1], S12);
+    round1_logic(buf, 2, md5_k[ 2], S13);
+    round1_logic(buf, 3, md5_k[ 3], S14);
+    round1_logic(buf, 4, md5_k[ 4], S11);
+    round1_logic(buf, 5, md5_k[ 5], S12);
+    round1_logic(buf, 6, md5_k[ 6], S13);
+    round1_logic(buf, 7, md5_k[ 7], S14);
+    round1_logic(buf, 8, md5_k[ 8], S11);
+    round1_logic(buf, 9, md5_k[ 9], S12);
+    round1_logic(buf, 10, md5_k[10], S13);
+    round1_logic(buf, 11, md5_k[11], S14);
+    round1_logic(buf, 12, md5_k[12], S11);
+    round1_logic(buf, 13, md5_k[13], S12);
+    round1_logic(buf, 14, md5_k[14], S13);
+    round1_logic(buf, 15, md5_k[15], S14);
+}
+
+static void round2(u_int32_t *buf)
 {
 	STEP(G, buf[0], buf[1], buf[2], buf[3], GET( 1), md5_k[16], S21)
     STEP(G, buf[3], buf[0], buf[1], buf[2], GET( 6), md5_k[17], S22)
@@ -41,7 +74,7 @@ static void round2(const unsigned char *ptr, u_int32_t *buf)
     STEP(G, buf[1], buf[2], buf[3], buf[0], GET(12), md5_k[31], S24)	
 }
 
-static void round3(const unsigned char *ptr, u_int32_t *buf)
+static void round3(u_int32_t *buf)
 {
 	STEP(H , buf[0], buf[1], buf[2], buf[3], GET( 5), md5_k[32], S31)
     STEP(H2, buf[3], buf[0], buf[1], buf[2], GET( 8), md5_k[33], S32)
@@ -61,7 +94,7 @@ static void round3(const unsigned char *ptr, u_int32_t *buf)
     STEP(H2, buf[1], buf[2], buf[3], buf[0], GET( 2), md5_k[47], S34)
 }
 
-static void round4(const unsigned char *ptr, u_int32_t *buf)
+static void round4(u_int32_t *buf)
 {
 	STEP(I, buf[0], buf[1], buf[2], buf[3], GET( 0), md5_k[48], S41)
     STEP(I, buf[3], buf[0], buf[1], buf[2], GET( 7), md5_k[49], S42)
@@ -84,7 +117,6 @@ static void round4(const unsigned char *ptr, u_int32_t *buf)
 const void *md5_transform(md5_ctx *ctx,
                         const void *data, unsigned long size)
 {
-	const unsigned char *ptr;
 	u_int32_t buf[4];
 	u_int32_t working_buf[4];
 
@@ -93,10 +125,10 @@ const void *md5_transform(md5_ctx *ctx,
 	while (size)
 	{
 		move_data(working_buf, buf);
-		round1(ptr, buf);
-		round2(ptr, buf);
-		round3(ptr, buf);
-		round4(ptr, buf);
+		round1(buf);
+		round2(buf);
+		round3(buf);
+		round4(buf);
         buf[0] += working_buf[0];
 		buf[1] += working_buf[1];
 		buf[2] += working_buf[2];
