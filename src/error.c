@@ -1,18 +1,6 @@
 #include "../inc/ssl.h"
 #include "../inc/dispatch.h"
 
-static void print_available()
-{
-    int i;
-
-    i = -1;
-    while (dispatch_lookup[++i])
-    {
-        ft_putstr_fd("\t", STDERR_FILENO);
-        ft_putendl_fd(dispatch_lookup[i], STDERR_FILENO);
-    }
-}
-
 void        print_usage()
 {
     ft_putstr_fd("usage: ft_ssl command", STDERR_FILENO);
@@ -61,40 +49,4 @@ void        arg_required(char c)
     ft_putchar_fd(c, STDERR_FILENO);
     ft_putendl_fd("", STDERR_FILENO);
     print_usage();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void        no_algotithm()
-{
-    ft_putendl_fd("No hashing alorithm provided", STDERR_FILENO);
-    print_available();
-    exit(EXIT_FAILURE);
-}
-
-void        invalid_alg(char *alg)
-{
-    ft_putstr_fd("Invalid hashing algorithm: ", STDERR_FILENO);
-    ft_putendl_fd(alg, STDERR_FILENO);
-    print_available();
-    exit(EXIT_FAILURE);
 }

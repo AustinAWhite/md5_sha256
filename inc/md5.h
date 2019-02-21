@@ -30,16 +30,16 @@ typedef struct {
 #define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
 #define GET(n) SET(n)
 
-#define STEP(f, a, b, c, d, x, t, s) \
-	(a) += f((b), (c), (d)) + (x) + (t); \
-	(a) = (((a) << (s)) | (((a) & 0xffffffff) >> (32 - (s)))); \
-	(a) += (b);
-
 #define MD_OUT(dst, src) \
 	(dst)[0] = (unsigned char)(src); \
 	(dst)[1] = (unsigned char)((src) >> 8); \
 	(dst)[2] = (unsigned char)((src) >> 16); \
 	(dst)[3] = (unsigned char)((src) >> 24);
+
+#define STEP(f, a, b, c, d, x, t, s) \
+	(a) += f((b), (c), (d)) + (x) + (t); \
+	(a) = (((a) << (s)) | (((a) & 0xffffffff) >> (32 - (s)))); \
+	(a) += (b);
 
 #define F(x, y, z)		((z) ^ ((x) & ((y) ^ (z))))
 #define G(x, y, z)		((y) ^ ((z) & ((x) ^ (y))))
@@ -77,5 +77,8 @@ void        md5(char *input, int cmd_idx, u_int8_t type);
 void        move_data(u_int32_t *arr1, u_int32_t *arr2);
 const void  *md5_transform(md5_ctx *ctx,
                         const void *data, unsigned long size);
-
+void        md5_init_ctx(md5_ctx *ctx);
+void        md5_update_damnnorm(md5_ctx *ctx,
+					unsigned long *used, unsigned long *available,
+					unsigned long *size, const void **message);
 #endif

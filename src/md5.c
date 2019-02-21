@@ -1,31 +1,6 @@
 #include "../inc/ssl.h"
 #include "../inc/md5.h"
 
-void md5_init_ctx(md5_ctx *ctx)
-{
-	ctx->state[0] = md5_a0;
-	ctx->state[1] = md5_b0;
-	ctx->state[2] = md5_c0;
-	ctx->state[3] = md5_d0;
-	ctx->count[0] = 0;
-	ctx->count[1] = 0;
-}
-
-void md5_update_damnnorm(md5_ctx *ctx,
-					unsigned long *used, unsigned long *available,
-					unsigned long *size, const void **message)
-{
-	*available = 64 - *used;
-	if (*size < *available)
-	{
-		memcpy(&ctx->buffer[*used], *message, *size);
-		return;
-	}
-	memcpy(&ctx->buffer[*used], *message, *available);
-	*message = *message + *available;
-	*size -= *available;
-}
-
 void md5_update(md5_ctx *ctx, const void *message, unsigned long size)
 {
 	u_int32_t cache_len;
@@ -50,6 +25,34 @@ void md5_update(md5_ctx *ctx, const void *message, unsigned long size)
 	memcpy(ctx->buffer, message, size);
 }
 
+void transform_and_out_damnnorm(md5_ctx *ctx, unsigned char *digest)
+{
+	int arr[4];
+
+	arr[0] = 0;
+	arr[1] = 56;
+	arr[2] = 0;
+	arr[3] = 0;
+	while (arr[0] < 2) 
+	{
+		ctx->buffer[arr[1]++] = (unsigned char)(ctx->count[arr[0]]);
+    	ctx->buffer[arr[1]++] = (unsigned char)((ctx->count[arr[0]]) >> 8);
+        ctx->buffer[arr[1]++] = (unsigned char)((ctx->count[arr[0]]) >> 16);
+    	ctx->buffer[arr[1]++] = (unsigned char)((ctx->count[arr[0]]) >> 24);
+		arr[0]++;
+	}
+	md5_transform(ctx, ctx->buffer, 64);
+	while (arr[2] < 4)
+	{
+		digest[arr[3]++] = (unsigned char)(ctx->state[arr[2]]);
+    	digest[arr[3]++] = (unsigned char)((ctx->state[arr[2]]) >> 8);
+    	digest[arr[3]++] = (unsigned char)((ctx->state[arr[2]]) >> 16);
+    	digest[arr[3]++] = (unsigned char)((ctx->state[arr[2]]) >> 24);
+		arr[2]++;
+    }
+	memset(ctx, 0, sizeof(*ctx));
+}
+
 void md5_final(unsigned char *digest, md5_ctx *ctx)
 {
 	unsigned long used;
@@ -67,14 +70,7 @@ void md5_final(unsigned char *digest, md5_ctx *ctx)
 	}
 	memset(&ctx->buffer[used], 0, available - 8);
 	ctx->count[0] <<= 3;
-	MD_OUT(&ctx->buffer[56], ctx->count[0])
-	MD_OUT(&ctx->buffer[60], ctx->count[1])
-	md5_transform(ctx, ctx->buffer, 64);
-	MD_OUT(&digest[0], ctx->state[0])
-	MD_OUT(&digest[4], ctx->state[1])
-	MD_OUT(&digest[8], ctx->state[2])
-	MD_OUT(&digest[12], ctx->state[3])
-	memset(ctx, 0, sizeof(*ctx));
+	transform_and_out_damnnorm(ctx, digest);
 }
 
 void md5(char *input, int cmd_idx, u_int8_t type)

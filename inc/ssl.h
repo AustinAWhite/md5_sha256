@@ -2,6 +2,7 @@
 #define _SSL_
 
 #include "../libft/libft.h"
+#include "./global.h"
 #include <sys/stat.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -24,18 +25,15 @@ static unsigned int flag_list[] = {
 void            print_usage();
 void            file_error(const char *cmd, char *input, char *err);
 void            error_cmd(char *cmd);
-
-void            invalid_alg(char *alg);
-void            no_algotithm();
-void            invalid_flag(char invalid);
 void            arg_required(char c);
+void            invalid_flag(char invalid);
 
 
 void            dispatcher(char *input, int cmd_idx, u_int8_t type);
 
 char            *readfile(char *path);
 void            print_hash(int cmd_idx, char *input, u_int8_t type, unsigned char hash[], unsigned int size);
-unsigned int    count_commands();
+int             count_commands();
 void            move_data(u_int32_t *arr1, u_int32_t *arr2);
 
 #endif

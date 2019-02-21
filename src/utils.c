@@ -9,9 +9,9 @@ void move_data(u_int32_t *arr1, u_int32_t *arr2)
 	arr1[3] = arr2[3];
 }
 
-unsigned int count_commands()
+int count_commands()
 {
-    unsigned int cnt;
+    int cnt;
 
     cnt = 0;
     while (dispatch_funcs[cnt])
