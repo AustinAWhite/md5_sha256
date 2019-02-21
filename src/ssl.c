@@ -19,16 +19,15 @@ char    *read_stdin()
     return (message);
 }
 
-int handle_opts(u_int8_t *flags, int cmd_idx, char *arg, char *next_arg)
+int handle_opts(u_int8_t *flags, int cmd_idx, char *arg, char *next_arg, int *argi)
 {
     int i;
     unsigned int found;
     char *str;
-    int toggle;
+    static int toggle = 1;
 
     i = 0;
     str = NULL;
-    toggle = 1;
     while (arg[++i])
     {
         ((found = ft_chrindex(ALL_FLAGS, arg[i])) != -1) ?
@@ -36,14 +35,17 @@ int handle_opts(u_int8_t *flags, int cmd_idx, char *arg, char *next_arg)
         if (toggle && *flags & FLG_P)
         {
             toggle = 0;
-            dispatcher(read_stdin(), cmd_idx, *flags | IS_STR | FROM_STDIN);
+            printf("str: %s\n", read_stdin());
+            //dispatcher(read_stdin(), cmd_idx, *flags | IS_STR | FROM_STDIN);
         }
         if (*flags & FLG_S)
         {
             str = arg[i + i] ? &arg[i + 1] : next_arg;
+            *argi += arg[i + 1] ? 1 : 2;
             str ? NULL : arg_required('s');
-            dispatcher(str, cmd_idx, *flags | IS_STR);
-            return (arg[i + 1] ? 1: 2);
+            //dispatcher(str, cmd_idx, *flags | IS_STR);
+            printf("str: %s\n", str);
+            return (1);
         }
     }
     return (0);
@@ -64,16 +66,28 @@ int main(int ac, char **av)
         if (ft_strequ(av[i], dispatch_lookup[cmd_idx]))
             break ;
     dispatch_lookup[cmd_idx] ? NULL : error_cmd(av[i]);
-    while (av[i] && av[i][0] == '-' && !ft_strequ(av[i], "--"))
-        if (handle_opts(&flags, cmd_idx, av[i], av[i + 1]))
+    while (av[++i] && av[i][0] == '-' && !ft_strequ(av[i], "--"))
+        if (handle_opts(&flags, cmd_idx, av[i], av[i + 1], &i))
             break;
-    i += (flags & FLG_S || flags == 0) ? 0 : 1;
+    if (flags & FLG_P)
+        printf("p set\n");
+    if (flags & FLG_Q)
+        printf("q set\n");
+    if (flags & FLG_R)
+        printf("r set\n");
+    if (flags & FLG_S)
+        printf("s set\n");
+    //i += (flags & FLG_S || flags == 0) ? 0 : 1;
     while (av[i])
     {
         do_stdin = 0;
-        dispatcher(av[i++], cmd_idx, flags | IS_FILE);
+        printf("file: %s\n", av[i++]);
+        //dispatcher(av[i++], cmd_idx, flags | IS_FILE);
     }
     if (do_stdin && !(flags & FLG_P) && !(flags & FLG_S))
-        dispatcher(read_stdin(), cmd_idx, flags | IS_STR | FROM_STDIN);
+    {
+        printf("str: %s\n", read_stdin());       
+        //dispatcher(read_stdin(), cmd_idx, flags | IS_STR | FROM_STDIN);
+    }
     return (0);
 }
