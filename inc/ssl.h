@@ -31,7 +31,7 @@ void            invalid_flag(char invalid);
 void            arg_required(char c);
 
 
-void            dispatcher(int cmd_idx, u_int8_t type, char *input);
+void            dispatcher(char *input, int cmd_idx, u_int8_t type);
 
 char            *readfile(char *path);
 void            print_hash(int cmd_idx, char *input, u_int8_t type, unsigned char hash[], unsigned int size);

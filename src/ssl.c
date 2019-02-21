@@ -36,13 +36,13 @@ int handle_opts(u_int8_t *flags, int cmd_idx, char *arg, char *next_arg)
         if (toggle && *flags & FLG_P)
         {
             toggle = 0;
-            dispatch_funcs[cmd_idx](read_stdin(), cmd_idx, *flags | IS_STR | FROM_STDIN);
+            dispatcher(read_stdin(), cmd_idx, *flags | IS_STR | FROM_STDIN);
         }
         if (*flags & FLG_S)
         {
             str = arg[i + i] ? &arg[i + 1] : next_arg;
             str ? NULL : arg_required('s');
-            dispatch_funcs[cmd_idx](str, cmd_idx, *flags | IS_STR);
+            dispatcher(str, cmd_idx, *flags | IS_STR);
             return (arg[i + 1] ? 1: 2);
         }
     }
@@ -54,19 +54,26 @@ int main(int ac, char **av)
     int cmd_idx;
     int i;
     u_int8_t flags;
+    int do_stdin;
 
     cmd_idx = -1;
     i = 1;
+    do_stdin = 1;
     ac == 1 ? print_usage() : NULL;
     while (dispatch_lookup[++cmd_idx]&& cmd_idx < count_commands())
         if (ft_strequ(av[i], dispatch_lookup[cmd_idx]))
             break ;
     dispatch_lookup[cmd_idx] ? NULL : error_cmd(av[i]);
-    while (av[++i] && av[i][0] == '-' && !ft_strequ(av[i], "--"))
-        if (i += handle_opts(&flags, cmd_idx, av[i], av[i + 1]))
+    while (av[i] && av[i][0] == '-' && !ft_strequ(av[i], "--"))
+        if (handle_opts(&flags, cmd_idx, av[i], av[i + 1]))
             break;
-    i += flags & FLG_S ? 0 : 1;
+    i += (flags & FLG_S || flags == 0) ? 0 : 1;
     while (av[i])
-        dispatch_funcs[cmd_idx](av[i++], cmd_idx, flags | IS_FILE);
+    {
+        do_stdin = 0;
+        dispatcher(av[i++], cmd_idx, flags | IS_FILE);
+    }
+    if (do_stdin && !(flags & FLG_P) && !(flags & FLG_S))
+        dispatcher(read_stdin(), cmd_idx, flags | IS_STR | FROM_STDIN);
     return (0);
 }

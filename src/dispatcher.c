@@ -1,7 +1,7 @@
 #include "../inc/ssl.h"
 #include "../inc/dispatch.h"
 
-void dispatcher(int cmd_idx, u_int8_t type, char *input)
+void dispatcher(char *input, int cmd_idx, u_int8_t type)
 {
     struct stat fstat;
     unsigned int i;
