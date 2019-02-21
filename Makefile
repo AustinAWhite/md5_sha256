@@ -1,6 +1,7 @@
 NAME	=	ft_ssl
 #CFLAGS	=	-Wall -Werror -Wextra
-FILES	=	ssl error md5 sha256 utils dispatcher md5_transorm md5_helpers
+FILES	=	ssl error md5 sha256 utils dispatcher md5_transorm md5_helpers \
+			md5_round_logic
 SRC		=	$(FILES:%=src/%.c)
 OBJ		=	$(SRC:%.c=%.o)
 

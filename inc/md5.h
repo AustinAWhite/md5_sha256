@@ -29,20 +29,6 @@ typedef struct {
 
 extern const unsigned char *ptr;
 
-#define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
-#define GET(n) SET(n)
-
-#define STEP(f, a, b, c, d, x, t, s) \
-	(a) += f((b), (c), (d)) + (x) + (t); \
-	(a) = (((a) << (s)) | (((a) & 0xffffffff) >> (32 - (s)))); \
-	(a) += (b);
-
-#define F(x, y, z)		((z) ^ ((x) & ((y) ^ (z))))
-#define G(x, y, z)		((y) ^ ((z) & ((x) ^ (y))))
-#define H(x, y, z)		(((x) ^ (y)) ^ (z))
-#define H2(x, y, z)		((x) ^ ((y) ^ (z)))
-#define I(x, y, z)		((y) ^ ((x) | ~(z)))
-
 static uint32_t md5_k[64] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -77,4 +63,9 @@ void        md5_init_ctx(md5_ctx *ctx);
 void        md5_update_damnnorm(md5_ctx *ctx,
 					unsigned long *used, unsigned long *available,
 					unsigned long *size, const void **message);
+void        round1_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
+void        round2_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
+void        round3_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
+void        round3_logic_H2(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
+void        round4_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
 #endif
