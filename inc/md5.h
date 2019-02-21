@@ -30,12 +30,6 @@ typedef struct {
 #define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
 #define GET(n) SET(n)
 
-#define MD_OUT(dst, src) \
-	(dst)[0] = (unsigned char)(src); \
-	(dst)[1] = (unsigned char)((src) >> 8); \
-	(dst)[2] = (unsigned char)((src) >> 16); \
-	(dst)[3] = (unsigned char)((src) >> 24);
-
 #define STEP(f, a, b, c, d, x, t, s) \
 	(a) += f((b), (c), (d)) + (x) + (t); \
 	(a) = (((a) << (s)) | (((a) & 0xffffffff) >> (32 - (s)))); \
