@@ -3,9 +3,9 @@
 
 #include <inttypes.h>
 
-#define CHUNK_SIZE 64
+#define BLOCK_SIZE 64
 #define TOTAL_LEN 8
-#define SHIFT_RIGHT(x, n)(x >> n | x << (32 - n))
+#define SR(x, n)(x >> n | x << (32 - n))
 
 typedef struct {
 	u_int32_t w[64];
@@ -20,7 +20,7 @@ typedef struct {
 typedef struct {
 	u_int32_t state[8];
 	u_int32_t count[2];
-	u_int8_t chunk[CHUNK_SIZE];
+	u_int8_t block[BLOCK_SIZE];
 	const uint8_t *message;
 	int put_one;
 	int complete;
