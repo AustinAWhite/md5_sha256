@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   md5.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/21 22:47:00 by awhite            #+#    #+#             */
+/*   Updated: 2019/02/21 22:48:53 by awhite           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/ssl.h"
 #include "../inc/md5.h"
 
-void md5_update(md5_ctx *ctx, const void *message, unsigned long size)
+void	md5_update(md5_ctx *ctx, const void *message, unsigned long size)
 {
-	u_int32_t cache_len;
-	unsigned long used;
-    unsigned long available;
+	u_int32_t		cache_len;
+	unsigned long	used;
+	unsigned long	available;
 
 	cache_len = ctx->count[0];
 	if ((ctx->count[0] = (cache_len + size) & 0x1fffffff) < cache_len)
@@ -25,7 +37,7 @@ void md5_update(md5_ctx *ctx, const void *message, unsigned long size)
 	memcpy(ctx->buffer, message, size);
 }
 
-void transform_and_out_damnnorm(md5_ctx *ctx, unsigned char *digest)
+void	transform_and_out_damnnorm(md5_ctx *ctx, unsigned char *digest)
 {
 	int arr[4];
 
@@ -33,30 +45,30 @@ void transform_and_out_damnnorm(md5_ctx *ctx, unsigned char *digest)
 	arr[1] = 56;
 	arr[2] = 0;
 	arr[3] = 0;
-	while (arr[0] < 2) 
+	while (arr[0] < 2)
 	{
 		ctx->buffer[arr[1]++] = (unsigned char)(ctx->count[arr[0]]);
-    	ctx->buffer[arr[1]++] = (unsigned char)((ctx->count[arr[0]]) >> 8);
-        ctx->buffer[arr[1]++] = (unsigned char)((ctx->count[arr[0]]) >> 16);
-    	ctx->buffer[arr[1]++] = (unsigned char)((ctx->count[arr[0]]) >> 24);
+		ctx->buffer[arr[1]++] = (unsigned char)((ctx->count[arr[0]]) >> 8);
+		ctx->buffer[arr[1]++] = (unsigned char)((ctx->count[arr[0]]) >> 16);
+		ctx->buffer[arr[1]++] = (unsigned char)((ctx->count[arr[0]]) >> 24);
 		arr[0]++;
 	}
 	md5_transform(ctx, ctx->buffer, 64);
 	while (arr[2] < 4)
 	{
 		digest[arr[3]++] = (unsigned char)(ctx->state[arr[2]]);
-    	digest[arr[3]++] = (unsigned char)((ctx->state[arr[2]]) >> 8);
-    	digest[arr[3]++] = (unsigned char)((ctx->state[arr[2]]) >> 16);
-    	digest[arr[3]++] = (unsigned char)((ctx->state[arr[2]]) >> 24);
+		digest[arr[3]++] = (unsigned char)((ctx->state[arr[2]]) >> 8);
+		digest[arr[3]++] = (unsigned char)((ctx->state[arr[2]]) >> 16);
+		digest[arr[3]++] = (unsigned char)((ctx->state[arr[2]]) >> 24);
 		arr[2]++;
-    }
+	}
 	memset(ctx, 0, sizeof(*ctx));
 }
 
-void md5_final(unsigned char *digest, md5_ctx *ctx)
+void	md5_final(unsigned char *digest, md5_ctx *ctx)
 {
 	unsigned long used;
-    unsigned long available;
+	unsigned long available;
 
 	used = ctx->count[0] & 0x3f;
 	ctx->buffer[used++] = 0x80;
@@ -73,19 +85,19 @@ void md5_final(unsigned char *digest, md5_ctx *ctx)
 	transform_and_out_damnnorm(ctx, digest);
 }
 
-void md5(char *input, int cmd_idx, u_int8_t type)
+void	md5(char *input, int cmd_idx, u_int8_t type)
 {
-    md5_ctx ctx;
-	u_int8_t digest[16];
-    char *message;
+	md5_ctx		ctx;
+	u_int8_t	digest[16];
+	char		*message;
 
-    if (type & IS_STR)
-        message = input;
-    else
-        if ((message = readfile(input)) == NULL)
-            return;
+	if (type & IS_STR)
+		message = input;
+	else if (type & IS_FILE)
+		if ((message = readfile(input)) == NULL)
+			return ;
 	md5_init_ctx(&ctx);
 	md5_update(&ctx, message, ft_strlen(message));
 	md5_final(digest, &ctx);
-    print_hash(cmd_idx, input, type, digest, 16);
+	print_hash(cmd_idx, input, type, digest, 16);
 }

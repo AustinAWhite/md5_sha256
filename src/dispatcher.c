@@ -1,25 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dispatcher.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/21 22:41:14 by awhite            #+#    #+#             */
+/*   Updated: 2019/02/21 22:42:22 by awhite           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/ssl.h"
 #include "../inc/dispatch.h"
 
-void dispatcher(char *input, int cmd_idx, u_int8_t type)
+void	dispatcher(char *input, int cmd_idx, u_int8_t type)
 {
-    struct stat fstat;
+	struct stat fstat;
 
-    if (type & IS_STR)
-        dispatch_funcs[cmd_idx](input, cmd_idx, type);
-    else if (type & IS_FILE)
-    {
-        if (access(input, F_OK) != -1) 
-        {
-            stat(input, &fstat);
-            if (S_ISDIR(fstat.st_mode))
-                file_error(dispatch_lookup[cmd_idx], input,
-                                        "Is a directory");
-            else
-                dispatch_funcs[cmd_idx](input, cmd_idx, type);
-        }
-        else
-            file_error(dispatch_lookup[cmd_idx], input,
+	if (type & IS_STR)
+		dispatch_funcs[cmd_idx](input, cmd_idx, type);
+	else if (type & IS_FILE)
+	{
+		if (access(input, F_OK) != -1)
+		{
+			stat(input, &fstat);
+			if (S_ISDIR(fstat.st_mode))
+				file_error(dispatch_lookup[cmd_idx], input,
+										"Is a directory");
+			else
+				dispatch_funcs[cmd_idx](input, cmd_idx, type);
+		}
+		else
+			file_error(dispatch_lookup[cmd_idx], input,
 										"No such file or directory");
-    }
+	}
 }

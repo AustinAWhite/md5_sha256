@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   md5_round_logic.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/21 22:54:56 by awhite            #+#    #+#             */
+/*   Updated: 2019/02/21 22:55:20 by awhite           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/ssl.h"
 #include "../inc/md5.h"
 
@@ -12,62 +24,62 @@
 #define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
 #define GET(n) SET(n)
 
-void        round1_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
+void	round1_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
-    u_int32_t R;
-    u_int32_t g;
+	u_int32_t r;
+	u_int32_t g;
 
-    R = F((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + SET(x);
-    buf[0] = buf[3];
-    buf[3] = buf[2];
-    buf[2] = buf[1];
-    buf[1] += LEFT_ROT(R, s);
+	r = F((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + SET(x);
+	buf[0] = buf[3];
+	buf[3] = buf[2];
+	buf[2] = buf[1];
+	buf[1] += LEFT_ROT(r, s);
 }
 
-void        round2_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
+void	round2_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
-    u_int32_t R;
-    u_int32_t g;
+	u_int32_t r;
+	u_int32_t g;
 
-    R = G((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
-    buf[0] = buf[3];
-    buf[3] = buf[2];
-    buf[2] = buf[1];
-    buf[1] += LEFT_ROT(R, s);
+	r = G((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
+	buf[0] = buf[3];
+	buf[3] = buf[2];
+	buf[2] = buf[1];
+	buf[1] += LEFT_ROT(r, s);
 }
 
-void        round3_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
+void	round3_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
-    u_int32_t R;
-    u_int32_t g;
+	u_int32_t r;
+	u_int32_t g;
 
-    R = H((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
-    buf[0] = buf[3];
-    buf[3] = buf[2];
-    buf[2] = buf[1];
-    buf[1] += LEFT_ROT(R, s);
+	r = H((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
+	buf[0] = buf[3];
+	buf[3] = buf[2];
+	buf[2] = buf[1];
+	buf[1] += LEFT_ROT(r, s);
 }
 
-void        round3_logic_H2(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
+void	round3_logic_H2(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
-    u_int32_t R;
-    u_int32_t g;
+	u_int32_t r;
+	u_int32_t g;
 
-    R = H2((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
-    buf[0] = buf[3];
-    buf[3] = buf[2];
-    buf[2] = buf[1];
-    buf[1] += LEFT_ROT(R, s);
+	r = H2((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
+	buf[0] = buf[3];
+	buf[3] = buf[2];
+	buf[2] = buf[1];
+	buf[1] += LEFT_ROT(r, s);
 }
 
-void        round4_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
+void	round4_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
-    u_int32_t R;
-    u_int32_t g;
+	u_int32_t r;
+	u_int32_t g;
 
-    R = I((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
-    buf[0] = buf[3];
-    buf[3] = buf[2];
-    buf[2] = buf[1];
-    buf[1] += LEFT_ROT(R, s);
+	r = I((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
+	buf[0] = buf[3];
+	buf[3] = buf[2];
+	buf[2] = buf[1];
+	buf[1] += LEFT_ROT(r, s);
 }
