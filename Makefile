@@ -5,11 +5,8 @@ FILES	=	ssl error md5 sha256 utils dispatcher md5_transorm md5_helpers \
 SRC		=	$(FILES:%=src/%.c)
 OBJ		=	$(SRC:%.c=%.o)
 
-all: $(NAME) clean fclean
-.PHONY : all
-
 $(NAME) : $(OBJ)
-	#@make -C libft/
+	@make -C libft/
 	@echo "Compiling $(NAME)..."
 	@gcc $(OBJ) -o $(NAME) -L libft/ -lft
 
@@ -23,12 +20,12 @@ cleandebug:
 
 clean:
 	@echo "Removing Object Files..."
-	#@make -C libft/ clean
+	@make -C libft/ clean
 	@/bin/rm -f $(OBJ)
 
 fclean: cleandebug clean
 	@echo "Removing $(NAME)..."
-	#@make -C libft/ fclean
+	@make -C libft/ fclean
 	@/bin/rm -f $(NAME)
 
 re: fclean all

@@ -42,7 +42,7 @@ int		handle_opts(t_container *d, char *arg, char *next_arg, int *argi)
 	while (arg[++i])
 	{
 		((found = ft_chrindex(ALL_FLAGS, arg[i])) != -1) ?
-			(*d).flags |= flag_list[found] : invalid_flag(arg[i]);
+			(*d).flags |= g_flag_list[found] : invalid_flag(arg[i]);
 		if (toggle && (*d).flags & FLG_P)
 		{
 			toggle = 0;
@@ -70,10 +70,10 @@ int		main(int ac, char **av)
 	i = 1;
 	do_stdin = 1;
 	ac == 1 ? print_usage() : NULL;
-	while (dispatch_lookup[++d.cmd_idx] && d.cmd_idx < count_commands())
-		if (ft_strequ(av[i], dispatch_lookup[d.cmd_idx]))
+	while (g_dispatch_lookup[++d.cmd_idx] && d.cmd_idx < count_commands())
+		if (ft_strequ(av[i], g_dispatch_lookup[d.cmd_idx]))
 			break ;
-	dispatch_lookup[d.cmd_idx] ? NULL : error_cmd(av[i]);
+	g_dispatch_lookup[d.cmd_idx] ? NULL : error_cmd(av[i]);
 	while (av[++i] && av[i][0] == '-' && !ft_strequ(av[i], "--"))
 		if (handle_opts(&d, av[i], av[i + 1], &i))
 			break ;

@@ -26,7 +26,7 @@ int		count_commands(void)
 	int cnt;
 
 	cnt = 0;
-	while (dispatch_funcs[cnt])
+	while (g_dispatch_funcs[cnt])
 		cnt++;
 	return (cnt);
 }

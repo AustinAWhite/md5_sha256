@@ -19,14 +19,14 @@ void	print2_damnnorm(int cmd_idx, char *input, u_int8_t info)
 	{
 		if (info & IS_STR)
 		{
-			ft_putstr(dispatch_lookup[cmd_idx]);
+			ft_putstr(g_dispatch_lookup[cmd_idx]);
 			ft_putstr(" (\"");
 			ft_putstr(input);
 			ft_putstr("\") = ");
 		}
 		else if (info & IS_FILE)
 		{
-			ft_putstr(dispatch_lookup[cmd_idx]);
+			ft_putstr(g_dispatch_lookup[cmd_idx]);
 			ft_putstr(" (");
 			ft_putstr(input);
 			ft_putstr(") = ");

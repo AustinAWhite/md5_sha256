@@ -13,7 +13,7 @@
 #include "../inc/ssl.h"
 #include "../inc/sha256.h"
 
-static void	init_buf_state(sha256_ctx *ctx, const void *input, size_t len)
+static void	init_buf_state(t_sha256_ctx *ctx, const void *input, size_t len)
 {
 	ctx->state[0] = sha256_h0;
 	ctx->state[1] = sha256_h1;
@@ -37,7 +37,7 @@ void		calc_block_fucknorm2(u_int8_t buffer[], u_int32_t *len, int *i)
 	*len >>= 8;
 }
 
-int			calc_block_fucknorm(u_int8_t buffer[], sha256_ctx *ctx,
+int			calc_block_fucknorm(u_int8_t buffer[], t_sha256_ctx *ctx,
 										u_int32_t *len, size_t fcknorm[])
 {
 	int i;
@@ -66,7 +66,7 @@ int			calc_block_fucknorm(u_int8_t buffer[], sha256_ctx *ctx,
 	return (1);
 }
 
-int			calc_block(u_int8_t buffer[], sha256_ctx *ctx)
+int			calc_block(u_int8_t buffer[], t_sha256_ctx *ctx)
 {
 	size_t		fcknorm[2];
 	u_int32_t	len;
@@ -90,7 +90,7 @@ int			calc_block(u_int8_t buffer[], sha256_ctx *ctx)
 
 void		sha256(char *input, int cmd_idx, u_int8_t info)
 {
-	sha256_ctx		ctx;
+	t_sha256_ctx	ctx;
 	u_int8_t		hash[32];
 	char			*message;
 	unsigned int	len;

@@ -6,14 +6,13 @@
 /*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/26 13:54:07 by awhite            #+#    #+#             */
-/*   Updated: 2019/02/13 19:12:25 by awhite           ###   ########.fr       */
+/*   Updated: 2019/02/23 03:45:36 by awhite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# include "ft_stack.h"
 # include <fcntl.h>
 # include <string.h>
 # include <unistd.h>
@@ -95,8 +94,7 @@ int					ft_strdelims(char *str, char *delims);
 char				**ft_strtok_mod(char *s, char *delims);
 int					ft_strarrlen(char **str);
 int					ft_chrindex(char *str, char c);
-void    			ft_lstappend(t_list **blst, t_list *newelem);
+void				ft_lstappend(t_list **blst, t_list *newelem);
 char				*ft_itoa_base(int value, int base);
-
 
 #endif

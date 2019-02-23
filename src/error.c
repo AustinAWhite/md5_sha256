@@ -30,8 +30,8 @@ void		error_cmd(char *cmd)
 	ft_putstr_fd("\' is an invalid command.\n\n", STDERR_FILENO);
 	ft_putstr_fd("Standard commands:\n\n", STDERR_FILENO);
 	ft_putstr_fd("Message Digest commands:\n", STDERR_FILENO);
-	while (dispatch_lookup[++i])
-		ft_putendl_fd(dispatch_lookup[i], STDERR_FILENO);
+	while (g_dispatch_lookup[++i])
+		ft_putendl_fd(g_dispatch_lookup[i], STDERR_FILENO);
 	exit(EXIT_FAILURE);
 }
 

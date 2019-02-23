@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_chrindex.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/23 03:28:02 by awhite            #+#    #+#             */
+/*   Updated: 2019/02/23 03:28:53 by awhite           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-int ft_chrindex(char *str, char c)
+int	ft_chrindex(char *str, char c)
 {
-    int i;
+	int i;
 
-    i = -1;
-    while (str[++i])
-        if (str[i] == c)
-            return (i);
-    return (-1);
+	i = -1;
+	while (str[++i])
+		if (str[i] == c)
+			return (i);
+	return (-1);
 }

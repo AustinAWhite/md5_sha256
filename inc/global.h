@@ -1,12 +1,24 @@
-#ifndef _GLOBAL_
-#define _GLOBAL_
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   global.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/22 23:55:40 by awhite            #+#    #+#             */
+/*   Updated: 2019/02/22 23:55:41 by awhite           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include <inttypes.h>
+#ifndef GLOBAL_H
+# define GLOBAL_H
 
-typedef struct  s_container
+# include <inttypes.h>
+
+typedef struct	s_container
 {
-    int         cmd_idx;
-    u_int8_t    flags;
-}               t_container;
+	int			cmd_idx;
+	u_int8_t	flags;
+}				t_container;
 
 #endif
