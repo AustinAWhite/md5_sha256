@@ -16,17 +16,16 @@
 void	md5_update(md5_ctx *ctx, const void *message, unsigned long size)
 {
 	u_int32_t		cache_len;
-	unsigned long	used;
-	unsigned long	available;
+	unsigned long fucknorm[2];
 
 	cache_len = ctx->count[0];
 	if ((ctx->count[0] = (cache_len + size) & 0x1fffffff) < cache_len)
 		ctx->count[1]++;
 	ctx->count[1] += size >> 29;
-	used = cache_len & 0x3f;
-	if (used)
+	fucknorm[0] = cache_len & 0x3f;
+	if (fucknorm[0])
 	{
-		md5_update_damnnorm(ctx, &used, &available, &size, &message);
+		md5_update_damnnorm(ctx, fucknorm, &size, &message);
 		md5_transform(ctx, ctx->buffer, 64);
 	}
 	if (size >= 64)

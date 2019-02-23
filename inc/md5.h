@@ -61,7 +61,7 @@ const void  *md5_transform(md5_ctx *ctx,
                         const void *data, unsigned long size);
 void        md5_init_ctx(md5_ctx *ctx);
 void        md5_update_damnnorm(md5_ctx *ctx,
-					unsigned long *used, unsigned long *available,
+					unsigned long fucknorm[],
 					unsigned long *size, const void **message);
 void        round1_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
 void        round2_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);

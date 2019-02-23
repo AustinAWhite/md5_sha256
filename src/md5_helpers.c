@@ -23,17 +23,16 @@ void	md5_init_ctx(md5_ctx *ctx)
 	ctx->count[1] = 0;
 }
 
-void	md5_update_damnnorm(md5_ctx *ctx,
-					unsigned long *used, unsigned long *available,
+void	md5_update_damnnorm(md5_ctx *ctx, unsigned long fucknorm[],
 					unsigned long *size, const void **message)
 {
-	*available = 64 - *used;
-	if (*size < *available)
+	fucknorm[1] = 64 - fucknorm[0];
+	if (*size < fucknorm[1])
 	{
-		memcpy(&ctx->buffer[*used], *message, *size);
+		memcpy(&ctx->buffer[fucknorm[0]], *message, *size);
 		return ;
 	}
-	memcpy(&ctx->buffer[*used], *message, *available);
-	*message = *message + *available;
-	*size -= *available;
+	memcpy(&ctx->buffer[fucknorm[0]], *message, fucknorm[1]);
+	*message = *message + fucknorm[1];
+	*size -= fucknorm[1];
 }

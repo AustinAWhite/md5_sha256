@@ -11,7 +11,7 @@
 #define FLG_Q 0x2
 #define FLG_R 0x4
 #define FLG_S 0x8
-#define FROM_STDIN 0x10
+#define FS 0x10
 #define IS_STR 0x20
 #define IS_FILE 0x40
 #define ALL_FLAGS "pqrs"
