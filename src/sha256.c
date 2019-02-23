@@ -96,5 +96,6 @@ void sha256(char *input, int cmd_idx, u_int8_t info)
     len = ft_strlen(message);
 	init_buf_state(&ctx, message, len);
     sha256_transform(&ctx, hash);
-    print_hash(cmd_idx, input, info, hash, 32);
+	print2_damnnorm(cmd_idx, input, info);
+    print_hash(input, info, hash, 32);
 }

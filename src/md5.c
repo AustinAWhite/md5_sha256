@@ -98,5 +98,6 @@ void	md5(char *input, int cmd_idx, u_int8_t type)
 	md5_init_ctx(&ctx);
 	md5_update(&ctx, message, ft_strlen(message));
 	md5_final(digest, &ctx);
-	print_hash(cmd_idx, input, type, digest, 16);
+	print2_damnnorm(cmd_idx, input, type);
+	print_hash(input, type, digest, 16);
 }

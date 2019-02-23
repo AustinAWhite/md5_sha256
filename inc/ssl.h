@@ -32,7 +32,8 @@ void            invalid_flag(char invalid);
 void            dispatcher(char *input, int cmd_idx, u_int8_t type);
 
 char            *readfile(char *path);
-void            print_hash(int cmd_idx, char *input, u_int8_t type, unsigned char hash[], unsigned int size);
+void            print_hash(char *input, u_int8_t type, unsigned char hash[], unsigned int size);
+void            print2_damnnorm(int cmd_idx, char *input, u_int8_t info);
 int             count_commands();
 void            move_data(u_int32_t *arr1, u_int32_t *arr2);
 
