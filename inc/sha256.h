@@ -56,6 +56,8 @@ enum sha256_buf_init {
 	sha256_h7 = (u_int32_t)0x5be0cd19
 };
 
-void             sha256(char *input, int cmd_idx, u_int8_t type);
+void            sha256(char *input, int cmd_idx, u_int8_t type);
+void			sha256_transform(sha256_ctx *ctx, u_int8_t hash[32]);
+int				calc_chunk(u_int8_t buffer[BLOCK_SIZE], sha256_ctx *ctx);
 
 #endif
