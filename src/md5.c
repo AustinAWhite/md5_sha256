@@ -6,7 +6,7 @@
 /*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 22:47:00 by awhite            #+#    #+#             */
-/*   Updated: 2019/02/22 23:30:53 by awhite           ###   ########.fr       */
+/*   Updated: 2019/02/22 23:47:25 by awhite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	md5_final(unsigned char *digest, t_md5_ctx *ctx)
 
 void	md5(char *input, int cmd_idx, u_int8_t type)
 {
-	t_md5_ctx		ctx;
+	t_md5_ctx	ctx;
 	u_int8_t	digest[16];
 	char		*message;
 

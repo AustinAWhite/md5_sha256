@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sha256_transform.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/22 23:46:18 by awhite            #+#    #+#             */
+/*   Updated: 2019/02/22 23:46:30 by awhite           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/ssl.h"
 #include "../inc/sha256.h"
 
-void sha_transform2_damnnorm(sha256_vars *v, u_int8_t *blk_cpy)
+void	sha_transform2_damnnorm(sha256_vars *v, u_int8_t *blk_cpy)
 {
 	int i;
 
@@ -15,14 +27,16 @@ void sha_transform2_damnnorm(sha256_vars *v, u_int8_t *blk_cpy)
 	}
 	while (i < 64)
 	{
-		(*v).s0 = SR((*v).w[i - 15], 7) ^ SR((*v).w[i - 15], 18) ^ ((*v).w[i - 15] >> 3);
-		(*v).s1 = SR((*v).w[i - 2], 17) ^ SR((*v).w[i - 2], 19) ^ ((*v).w[i - 2] >> 10);
+		(*v).s0 = SR((*v).w[i - 15], 7) ^
+						SR((*v).w[i - 15], 18) ^ ((*v).w[i - 15] >> 3);
+		(*v).s1 = SR((*v).w[i - 2], 17) ^
+						SR((*v).w[i - 2], 19) ^ ((*v).w[i - 2] >> 10);
 		(*v).w[i] = (*v).w[i - 16] + (*v).s0 + (*v).w[i - 7] + (*v).s1;
 		i++;
 	}
 }
 
-void sha_transform3_damnnorm(sha256_vars *v, u_int32_t wb[])
+void	sha_transform3_damnnorm(sha256_vars *v, u_int32_t wb[])
 {
 	int i;
 
@@ -47,7 +61,7 @@ void sha_transform3_damnnorm(sha256_vars *v, u_int32_t wb[])
 	}
 }
 
-void sha_transform4_damnnorm(sha256_ctx *ctx, u_int8_t hash[32])
+void	sha_transform4_damnnorm(sha256_ctx *ctx, u_int8_t hash[32])
 {
 	int i;
 	int j;
@@ -56,34 +70,34 @@ void sha_transform4_damnnorm(sha256_ctx *ctx, u_int8_t hash[32])
 	j = 0;
 	while (i < 8)
 	{
-        hash[j++] = (uint8_t) (ctx->state[i] >> 24);
-        hash[j++] = (uint8_t) (ctx->state[i] >> 16);
-        hash[j++] = (uint8_t) (ctx->state[i] >> 8);
-        hash[j++] = (uint8_t) ctx->state[i];
+		hash[j++] = (uint8_t)(ctx->state[i] >> 24);
+		hash[j++] = (uint8_t)(ctx->state[i] >> 16);
+		hash[j++] = (uint8_t)(ctx->state[i] >> 8);
+		hash[j++] = (uint8_t)ctx->state[i];
 		i++;
-    }
+	}
 }
 
-void sha256_transform(sha256_ctx *ctx, u_int8_t hash[32])
+void	sha256_transform(sha256_ctx *ctx, u_int8_t hash[32])
 {
-	int i;
-	int j;
-	sha256_vars v;
-	u_int32_t wb[8];
-	u_int8_t *blk_cpy;
-	
+	int			i;
+	int			j;
+	sha256_vars	v;
+	u_int32_t	wb[8];
+	u_int8_t	*blk_cpy;
+
 	while (calc_block(ctx->block, ctx))
 	{
 		i = -1;
 		j = -1;
 		blk_cpy = ctx->block;
-		memset(v.w, 0x00, sizeof v.w);
+		memset(v.w, 0x00, sizeof(v.w));
 		sha_transform2_damnnorm(&v, blk_cpy);
 		while (++i < 8)
 			wb[i] = ctx->state[i];
-		sha_transform3_damnnorm(&v, wb);		
+		sha_transform3_damnnorm(&v, wb);
 		while (++j < 8)
 			ctx->state[j] += wb[j];
 	}
 	sha_transform4_damnnorm(ctx, hash);
-}	
+}

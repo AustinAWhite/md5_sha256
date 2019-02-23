@@ -6,7 +6,7 @@
 /*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 22:57:16 by awhite            #+#    #+#             */
-/*   Updated: 2019/02/21 23:12:11 by awhite           ###   ########.fr       */
+/*   Updated: 2019/02/22 23:48:35 by awhite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,21 +58,21 @@ static void	round2(u_int32_t *buf)
 static void	round3(u_int32_t *buf)
 {
 	round3_logic(buf, 5, md5_k[32], S31);
-	round3_logic_H2(buf, 8, md5_k[33], S32);
+	round3_logic_h2(buf, 8, md5_k[33], S32);
 	round3_logic(buf, 11, md5_k[34], S33);
-	round3_logic_H2(buf, 14, md5_k[35], S34);
+	round3_logic_h2(buf, 14, md5_k[35], S34);
 	round3_logic(buf, 1, md5_k[36], S31);
-	round3_logic_H2(buf, 4, md5_k[37], S32);
+	round3_logic_h2(buf, 4, md5_k[37], S32);
 	round3_logic(buf, 7, md5_k[38], S33);
-	round3_logic_H2(buf, 10, md5_k[39], S34);
+	round3_logic_h2(buf, 10, md5_k[39], S34);
 	round3_logic(buf, 13, md5_k[40], S31);
-	round3_logic_H2(buf, 0, md5_k[41], S32);
+	round3_logic_h2(buf, 0, md5_k[41], S32);
 	round3_logic(buf, 3, md5_k[42], S33);
-	round3_logic_H2(buf, 6, md5_k[43], S34);
+	round3_logic_h2(buf, 6, md5_k[43], S34);
 	round3_logic(buf, 9, md5_k[44], S31);
-	round3_logic_H2(buf, 12, md5_k[45], S32);
+	round3_logic_h2(buf, 12, md5_k[45], S32);
 	round3_logic(buf, 15, md5_k[46], S33);
-	round3_logic_H2(buf, 2, md5_k[47], S34);
+	round3_logic_h2(buf, 2, md5_k[47], S34);
 }
 
 static void	round4(u_int32_t *buf)

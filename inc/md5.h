@@ -67,6 +67,6 @@ void        md5_update_damnnorm(t_md5_ctx *ctx,
 void        round1_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
 void        round2_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
 void        round3_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
-void        round3_logic_H2(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
+void        round3_logic_h2(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
 void        round4_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);
 #endif

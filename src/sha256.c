@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sha256.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/22 23:42:39 by awhite            #+#    #+#             */
+/*   Updated: 2019/02/22 23:42:56 by awhite           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/ssl.h"
 #include "../inc/sha256.h"
 
-static void init_buf_state(sha256_ctx *ctx, const void *input, size_t len)
+static void	init_buf_state(sha256_ctx *ctx, const void *input, size_t len)
 {
 	ctx->state[0] = sha256_h0;
 	ctx->state[1] = sha256_h1;
@@ -18,14 +30,15 @@ static void init_buf_state(sha256_ctx *ctx, const void *input, size_t len)
 	ctx->complete = 0;
 }
 
-void	calc_block_fucknorm2(u_int8_t buffer[], u_int32_t *len, int *i)
+void		calc_block_fucknorm2(u_int8_t buffer[], u_int32_t *len, int *i)
 {
 	*i = *i - 1;
 	buffer[*i] = (u_int8_t)*len;
 	*len >>= 8;
 }
 
-int	calc_block_fucknorm(u_int8_t buffer[], sha256_ctx *ctx, u_int32_t *len, size_t fcknorm[])
+int			calc_block_fucknorm(u_int8_t buffer[], sha256_ctx *ctx,
+										u_int32_t *len, size_t fcknorm[])
 {
 	int i;
 
@@ -50,22 +63,22 @@ int	calc_block_fucknorm(u_int8_t buffer[], sha256_ctx *ctx, u_int32_t *len, size
 	}
 	else
 		memset(buffer, 0x00, fcknorm[0]);
-	return 1;
+	return (1);
 }
 
-int calc_block(u_int8_t buffer[], sha256_ctx *ctx)
+int			calc_block(u_int8_t buffer[], sha256_ctx *ctx)
 {
-	size_t fcknorm[2];
-	u_int32_t len;
+	size_t		fcknorm[2];
+	u_int32_t	len;
 
 	if (ctx->complete)
-		return 0;
+		return (0);
 	if (ctx->count[0] >= BLOCK_SIZE)
 	{
 		memcpy(buffer, ctx->message, BLOCK_SIZE);
 		ctx->message += BLOCK_SIZE;
 		ctx->count[0] -= BLOCK_SIZE;
-		return 1;
+		return (1);
 	}
 	memcpy(buffer, ctx->message, ctx->count[0]);
 	buffer += ctx->count[0];
@@ -75,22 +88,22 @@ int calc_block(u_int8_t buffer[], sha256_ctx *ctx)
 	return (calc_block_fucknorm(buffer, ctx, &len, fcknorm));
 }
 
-void sha256(char *input, int cmd_idx, u_int8_t info)
+void		sha256(char *input, int cmd_idx, u_int8_t info)
 {
-	sha256_ctx ctx;
-    u_int8_t hash[32];
-	char *message;
-	unsigned int len;
+	sha256_ctx		ctx;
+	u_int8_t		hash[32];
+	char			*message;
+	unsigned int	len;
 
-    if (info & IS_STR)
-        message = input;
-    else if (info & IS_FILE)
-        if ((message = readfile(input)) == NULL)
-            return ;
-    len = ft_strlen(message);
+	if (info & IS_STR)
+		message = input;
+	else if (info & IS_FILE)
+		if ((message = readfile(input)) == NULL)
+			return ;
+	len = ft_strlen(message);
 	init_buf_state(&ctx, message, len);
-    sha256_transform(&ctx, hash);
+	sha256_transform(&ctx, hash);
 	print2_damnnorm(cmd_idx, input, info);
-    print_hash(input, info, hash, 32);
+	print_hash(input, info, hash, 32);
 	ft_putendl("");
 }

@@ -6,7 +6,7 @@
 /*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 22:54:56 by awhite            #+#    #+#             */
-/*   Updated: 2019/02/21 22:55:20 by awhite           ###   ########.fr       */
+/*   Updated: 2019/02/22 23:48:01 by awhite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	round3_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 	buf[1] += LEFT_ROT(r, s);
 }
 
-void	round3_logic_H2(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
+void	round3_logic_h2(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
 	u_int32_t r;
 
