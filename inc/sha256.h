@@ -58,6 +58,6 @@ enum sha256_buf_init {
 
 void            sha256(char *input, int cmd_idx, u_int8_t type);
 void			sha256_transform(sha256_ctx *ctx, u_int8_t hash[32]);
-int				calc_chunk(u_int8_t buffer[BLOCK_SIZE], sha256_ctx *ctx);
+int				calc_block(u_int8_t buffer[BLOCK_SIZE], sha256_ctx *ctx);
 
 #endif

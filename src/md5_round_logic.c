@@ -27,7 +27,6 @@
 void	round1_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
 	u_int32_t r;
-	u_int32_t g;
 
 	r = F((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + SET(x);
 	buf[0] = buf[3];
@@ -39,7 +38,6 @@ void	round1_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 void	round2_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
 	u_int32_t r;
-	u_int32_t g;
 
 	r = G((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
 	buf[0] = buf[3];
@@ -51,7 +49,6 @@ void	round2_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 void	round3_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
 	u_int32_t r;
-	u_int32_t g;
 
 	r = H((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
 	buf[0] = buf[3];
@@ -63,7 +60,6 @@ void	round3_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 void	round3_logic_H2(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
 	u_int32_t r;
-	u_int32_t g;
 
 	r = H2((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
 	buf[0] = buf[3];
@@ -75,7 +71,6 @@ void	round3_logic_H2(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 void	round4_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
 {
 	u_int32_t r;
-	u_int32_t g;
 
 	r = I((buf[1]), (buf[2]), (buf[3])) + buf[0] + t + GET(x);
 	buf[0] = buf[3];

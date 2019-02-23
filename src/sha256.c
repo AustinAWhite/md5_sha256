@@ -24,10 +24,44 @@ static void init_buf_state(sha256_ctx *ctx, const void *input, size_t len)
 	ctx->complete = 0;
 }
 
-int calc_chunk(u_int8_t buffer[BLOCK_SIZE], sha256_ctx *ctx)
+void	calc_block_fucknorm2(u_int8_t buffer[], u_int32_t *len, int *i)
 {
-	size_t space_left;
-	size_t left;
+	*i = *i - 1;
+	buffer[*i] = (u_int8_t)*len;
+	*len >>= 8;
+}
+
+int	calc_block_fucknorm(u_int8_t buffer[], sha256_ctx *ctx, u_int32_t *len, size_t fcknorm[])
+{
+	int i;
+
+	i = 7;
+	if (!ctx->put_one)
+	{
+		*buffer++ = 0x80;
+		fcknorm[0] -= 1;
+		ctx->put_one = 1;
+	}
+	if (fcknorm[0] >= TOTAL_LEN)
+	{
+		fcknorm[1] = fcknorm[0] - TOTAL_LEN;
+		*len = ctx->count[1];
+		memset(buffer, 0x00, fcknorm[1]);
+		buffer += fcknorm[1];
+		buffer[7] = (u_int8_t)(*len << 3);
+		*len >>= 5;
+		while (i >= 0)
+			calc_block_fucknorm2(buffer, len, &i);
+		ctx->complete = 1;
+	}
+	else
+		memset(buffer, 0x00, fcknorm[0]);
+	return 1;
+}
+
+int calc_block(u_int8_t buffer[], sha256_ctx *ctx)
+{
+	size_t fcknorm[2];
 	u_int32_t len;
 
 	if (ctx->complete)
@@ -41,33 +75,10 @@ int calc_chunk(u_int8_t buffer[BLOCK_SIZE], sha256_ctx *ctx)
 	}
 	memcpy(buffer, ctx->message, ctx->count[0]);
 	buffer += ctx->count[0];
-	space_left = BLOCK_SIZE - ctx->count[0];
+	fcknorm[0] = BLOCK_SIZE - ctx->count[0];
 	ctx->message += ctx->count[0];
 	ctx->count[0] = 0;
-	if (!ctx->put_one)
-	{
-		*buffer++ = 0x80;
-		space_left -= 1;
-		ctx->put_one = 1;
-	}
-	if (space_left >= TOTAL_LEN)
-	{
-		left = space_left - TOTAL_LEN;
-		len = ctx->count[1];
-		memset(buffer, 0x00, left);
-		buffer += left;
-		buffer[7] = (u_int8_t)(len << 3);
-		len >>= 5;
-		for (int i = 6; i >= 0; i--)
-		{
-			buffer[i] = (u_int8_t)len;
-			len >>= 8;
-		}
-		ctx->complete = 1;
-	}
-	else
-		memset(buffer, 0x00, space_left);
-	return 1;
+	return (calc_block_fucknorm(buffer, ctx, &len, fcknorm));
 }
 
 void sha256(char *input, int cmd_idx, u_int8_t info)

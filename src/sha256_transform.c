@@ -72,7 +72,7 @@ void sha256_transform(sha256_ctx *ctx, u_int8_t hash[32])
 	u_int32_t wb[8];
 	u_int8_t *blk_cpy;
 	
-	while (calc_chunk(ctx->block, ctx))
+	while (calc_block(ctx->block, ctx))
 	{
 		i = -1;
 		j = -1;
