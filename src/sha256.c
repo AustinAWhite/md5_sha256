@@ -1,12 +1,6 @@
 #include "../inc/ssl.h"
 #include "../inc/sha256.h"
 
-/*
-Attribution:
-    Based on amosnier sha256 implementation
-    github.com/amosnier
-*/
-
 static void init_buf_state(sha256_ctx *ctx, const void *input, size_t len)
 {
 	ctx->state[0] = sha256_h0;
@@ -98,4 +92,5 @@ void sha256(char *input, int cmd_idx, u_int8_t info)
     sha256_transform(&ctx, hash);
 	print2_damnnorm(cmd_idx, input, info);
     print_hash(input, info, hash, 32);
+	ft_putendl("");
 }

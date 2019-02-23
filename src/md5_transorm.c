@@ -13,9 +13,9 @@
 #include "../inc/ssl.h"
 #include "../inc/md5.h"
 
-const unsigned char *ptr;
+const unsigned char *g_ptr;
 
-static void	round1( u_int32_t *buf)
+static void	round1(u_int32_t *buf)
 {
 	round1_logic(buf, 0, md5_k[0], S11);
 	round1_logic(buf, 1, md5_k[1], S12);
@@ -95,13 +95,13 @@ static void	round4(u_int32_t *buf)
 	round4_logic(buf, 9, md5_k[63], S44);
 }
 
-const void	*md5_transform(md5_ctx *ctx,
+const void	*md5_transform(t_md5_ctx *ctx,
 						const void *data, unsigned long size)
 {
 	u_int32_t buf[4];
 	u_int32_t working_buf[4];
 
-	ptr = (const unsigned char *)data;
+	g_ptr = (const unsigned char *)data;
 	move_data(buf, ctx->state);
 	while (size)
 	{
@@ -114,9 +114,9 @@ const void	*md5_transform(md5_ctx *ctx,
 		buf[1] += working_buf[1];
 		buf[2] += working_buf[2];
 		buf[3] += working_buf[3];
-		ptr += 64;
+		g_ptr += 64;
 		size -= 64;
 	}
 	move_data(ctx->state, buf);
-	return (ptr);
+	return (g_ptr);
 }

@@ -6,17 +6,17 @@
 /*   By: awhite <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 22:47:00 by awhite            #+#    #+#             */
-/*   Updated: 2019/02/21 22:48:53 by awhite           ###   ########.fr       */
+/*   Updated: 2019/02/22 23:30:53 by awhite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ssl.h"
 #include "../inc/md5.h"
 
-void	md5_update(md5_ctx *ctx, const void *message, unsigned long size)
+void	md5_update(t_md5_ctx *ctx, const void *message, unsigned long size)
 {
 	u_int32_t		cache_len;
-	unsigned long fucknorm[2];
+	unsigned long	fucknorm[2];
 
 	cache_len = ctx->count[0];
 	if ((ctx->count[0] = (cache_len + size) & 0x1fffffff) < cache_len)
@@ -36,7 +36,7 @@ void	md5_update(md5_ctx *ctx, const void *message, unsigned long size)
 	memcpy(ctx->buffer, message, size);
 }
 
-void	transform_and_out_damnnorm(md5_ctx *ctx, unsigned char *digest)
+void	transform_and_out_damnnorm(t_md5_ctx *ctx, unsigned char *digest)
 {
 	int arr[4];
 
@@ -64,7 +64,7 @@ void	transform_and_out_damnnorm(md5_ctx *ctx, unsigned char *digest)
 	memset(ctx, 0, sizeof(*ctx));
 }
 
-void	md5_final(unsigned char *digest, md5_ctx *ctx)
+void	md5_final(unsigned char *digest, t_md5_ctx *ctx)
 {
 	unsigned long used;
 	unsigned long available;
@@ -86,7 +86,7 @@ void	md5_final(unsigned char *digest, md5_ctx *ctx)
 
 void	md5(char *input, int cmd_idx, u_int8_t type)
 {
-	md5_ctx		ctx;
+	t_md5_ctx		ctx;
 	u_int8_t	digest[16];
 	char		*message;
 
@@ -100,4 +100,5 @@ void	md5(char *input, int cmd_idx, u_int8_t type)
 	md5_final(digest, &ctx);
 	print2_damnnorm(cmd_idx, input, type);
 	print_hash(input, type, digest, 16);
+	ft_putendl("");
 }

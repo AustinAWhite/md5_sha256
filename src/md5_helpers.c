@@ -13,7 +13,7 @@
 #include "../inc/ssl.h"
 #include "../inc/md5.h"
 
-void	md5_init_ctx(md5_ctx *ctx)
+void	md5_init_ctx(t_md5_ctx *ctx)
 {
 	ctx->state[0] = md5_a0;
 	ctx->state[1] = md5_b0;
@@ -23,7 +23,7 @@ void	md5_init_ctx(md5_ctx *ctx)
 	ctx->count[1] = 0;
 }
 
-void	md5_update_damnnorm(md5_ctx *ctx, unsigned long fucknorm[],
+void	md5_update_damnnorm(t_md5_ctx *ctx, unsigned long fucknorm[],
 					unsigned long *size, const void **message)
 {
 	fucknorm[1] = 64 - fucknorm[0];

@@ -20,14 +20,15 @@
 #define S43 15
 #define S44 21
 
-typedef struct {
-    u_int32_t state[4];
-    u_int32_t count[2];
-    u_int8_t buffer[64];
-    u_int32_t block[16];
-} md5_ctx;
+typedef struct  s_md5_ctx
+{
+    u_int32_t   state[4];
+    u_int32_t   count[2];
+    u_int8_t    buffer[64];
+    u_int32_t   block[16];
+}               t_md5_ctx;
 
-extern const unsigned char *ptr;
+extern const unsigned char *g_ptr;
 
 static uint32_t md5_k[64] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
@@ -57,10 +58,10 @@ enum md5_buf_init {
 
 void        md5(char *input, int cmd_idx, u_int8_t type);
 void        move_data(u_int32_t *arr1, u_int32_t *arr2);
-const void  *md5_transform(md5_ctx *ctx,
+const void  *md5_transform(t_md5_ctx *ctx,
                         const void *data, unsigned long size);
-void        md5_init_ctx(md5_ctx *ctx);
-void        md5_update_damnnorm(md5_ctx *ctx,
+void        md5_init_ctx(t_md5_ctx *ctx);
+void        md5_update_damnnorm(t_md5_ctx *ctx,
 					unsigned long fucknorm[],
 					unsigned long *size, const void **message);
 void        round1_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s);

@@ -21,7 +21,7 @@
 #define H2(x, y, z)		((x) ^ ((y) ^ (z)))
 #define I(x, y, z)		((y) ^ ((x) | ~(z)))
 
-#define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
+#define SET(n) (*(u_int32_t *)&g_ptr[(n) * 4])
 #define GET(n) SET(n)
 
 void	round1_logic(u_int32_t *buf, u_int32_t x, u_int32_t t, u_int32_t s)
