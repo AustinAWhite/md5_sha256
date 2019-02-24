@@ -15,7 +15,7 @@
 
 # include <inttypes.h>
 
-# define BLOCK_SIZE 64
+# define BSIZE_256 64
 # define TOTAL_LEN 8
 # define SR(x, n)(x >> n | x << (32 - n))
 
@@ -34,7 +34,7 @@ typedef struct		s_sha256_ctx
 {
 	u_int32_t		state[8];
 	u_int32_t		count[2];
-	u_int8_t		block[BLOCK_SIZE];
+	u_int8_t		block[BSIZE_256];
 	const uint8_t	*message;
 	int				put_one;
 	int				complete;
@@ -72,6 +72,6 @@ enum	e_sha256_buf_init {
 
 void				sha256(char *input, int cmd_idx, u_int8_t type);
 void				sha256_transform(t_sha256_ctx *ctx, u_int8_t hash[32]);
-int					calc_block(u_int8_t buffer[BLOCK_SIZE], t_sha256_ctx *ctx);
+int					calc_block(u_int8_t buffer[BSIZE_256], t_sha256_ctx *ctx);
 
 #endif

@@ -73,16 +73,16 @@ int			calc_block(u_int8_t buffer[], t_sha256_ctx *ctx)
 
 	if (ctx->complete)
 		return (0);
-	if (ctx->count[0] >= BLOCK_SIZE)
+	if (ctx->count[0] >= BSIZE_256)
 	{
-		memcpy(buffer, ctx->message, BLOCK_SIZE);
-		ctx->message += BLOCK_SIZE;
-		ctx->count[0] -= BLOCK_SIZE;
+		memcpy(buffer, ctx->message, BSIZE_256);
+		ctx->message += BSIZE_256;
+		ctx->count[0] -= BSIZE_256;
 		return (1);
 	}
 	memcpy(buffer, ctx->message, ctx->count[0]);
 	buffer += ctx->count[0];
-	fcknorm[0] = BLOCK_SIZE - ctx->count[0];
+	fcknorm[0] = BSIZE_256 - ctx->count[0];
 	ctx->message += ctx->count[0];
 	ctx->count[0] = 0;
 	return (calc_block_fucknorm(buffer, ctx, &len, fcknorm));
