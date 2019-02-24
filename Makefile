@@ -5,6 +5,8 @@ FILES	=	ssl error md5 sha256 utils dispatcher md5_transorm md5_helpers \
 SRC		=	$(FILES:%=src/%.c)
 OBJ		=	$(SRC:%.c=%.o)
 
+all : $(NAME)
+
 $(NAME) : $(OBJ)
 	@make -C libft/
 	@echo "Compiling $(NAME)..."

@@ -91,7 +91,7 @@ void	sha256_transform(t_sha256_ctx *ctx, u_int8_t hash[32])
 		i = -1;
 		j = -1;
 		blk_cpy = ctx->block;
-		memset(v.w, 0x00, sizeof(v.w));
+		ft_memset(v.w, 0x00, sizeof(v.w));
 		sha_transform2_damnnorm(&v, blk_cpy);
 		while (++i < 8)
 			wb[i] = ctx->state[i];

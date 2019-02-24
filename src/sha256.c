@@ -53,7 +53,7 @@ int			calc_block_fucknorm(u_int8_t buffer[], t_sha256_ctx *ctx,
 	{
 		fcknorm[1] = fcknorm[0] - TOTAL_LEN;
 		*len = ctx->count[1];
-		memset(buffer, 0x00, fcknorm[1]);
+		ft_memset(buffer, 0x00, fcknorm[1]);
 		buffer += fcknorm[1];
 		buffer[7] = (u_int8_t)(*len << 3);
 		*len >>= 5;
@@ -62,7 +62,7 @@ int			calc_block_fucknorm(u_int8_t buffer[], t_sha256_ctx *ctx,
 		ctx->complete = 1;
 	}
 	else
-		memset(buffer, 0x00, fcknorm[0]);
+		ft_memset(buffer, 0x00, fcknorm[0]);
 	return (1);
 }
 
@@ -75,12 +75,12 @@ int			calc_block(u_int8_t buffer[], t_sha256_ctx *ctx)
 		return (0);
 	if (ctx->count[0] >= BSIZE_256)
 	{
-		memcpy(buffer, ctx->message, BSIZE_256);
+		ft_memcpy(buffer, ctx->message, BSIZE_256);
 		ctx->message += BSIZE_256;
 		ctx->count[0] -= BSIZE_256;
 		return (1);
 	}
-	memcpy(buffer, ctx->message, ctx->count[0]);
+	ft_memcpy(buffer, ctx->message, ctx->count[0]);
 	buffer += ctx->count[0];
 	fcknorm[0] = BSIZE_256 - ctx->count[0];
 	ctx->message += ctx->count[0];
