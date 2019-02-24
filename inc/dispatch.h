@@ -15,16 +15,23 @@
 
 # include "./md5.h"
 # include "./sha256.h"
+# include "./sha224.h"
 # include <string.h>
 
 static void (*g_dispatch_funcs[])(char *input, int cmd_idx, u_int8_t type) = {
 	&md5,
 	&sha256,
+	&sha224,
+	//&sha384,
+	//&sha512,
 };
 
 static const char	*g_dispatch_lookup[] = {
 	"md5",
 	"sha256",
+	"sha224",
+	//"sha384",
+	//"sha512",
 	(char *)NULL,
 };
 
