@@ -6,7 +6,7 @@ void	dispatcher(char *input, int cmd_idx, u_int8_t info)
 	struct stat fstat;
 
 	if (info & IS_STR)
-		g_dispatch_funcs[cmd_idx](input, cmd_idx, info);
+		g_dispatch_funcs[cmd_idx](input, info);
 	else if (info & IS_FILE)
 	{
 		if (access(input, F_OK) != -1)
@@ -16,7 +16,7 @@ void	dispatcher(char *input, int cmd_idx, u_int8_t info)
 				file_error(g_dispatch_lookup[cmd_idx], input,
 										"Is a directory");
 			else
-				g_dispatch_funcs[cmd_idx](input, cmd_idx, info);
+				g_dispatch_funcs[cmd_idx](input, info);
 		}
 		else
 			file_error(g_dispatch_lookup[cmd_idx], input,

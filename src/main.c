@@ -5,7 +5,7 @@ static unsigned int g_flag_list[] = {
 	FLG_P, FLG_Q, FLG_R, FLG_S,
 };
 
-void (*g_dispatch_funcs[])(char *input, int cmd_idx, u_int8_t type) = {
+void (*g_dispatch_funcs[])(char *input, u_int8_t type) = {
 	&md5,
 	//&sha256,
 };
