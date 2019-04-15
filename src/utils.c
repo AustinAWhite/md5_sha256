@@ -1,14 +1,6 @@
 #include "../inc/ssl.h"
 #include "../inc/dispatch.h"
 
-void	move_data(u_int32_t *arr1, u_int32_t *arr2)
-{
-	arr1[0] = arr2[0];
-	arr1[1] = arr2[1];
-	arr1[2] = arr2[2];
-	arr1[3] = arr2[3];
-}
-
 int		count_commands(void)
 {
 	int cnt;

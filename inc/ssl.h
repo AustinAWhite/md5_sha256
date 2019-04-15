@@ -43,6 +43,5 @@ void 			print_hash(char* command, char *input,
 					unsigned char hash[],
 					unsigned int size, uint8_t info);
 int				count_commands();
-void			move_data(u_int32_t *arr1, u_int32_t *arr2);
 
 #endif
