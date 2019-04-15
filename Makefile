@@ -1,8 +1,7 @@
 NAME	=	ft_ssl
 CFLAGS	=	-Wall -Werror -Wextra
-FILES	=	ssl error md5 sha256 utils dispatcher md5_transorm md5_helpers \
-			md5_round_logic sha256_transform print sha224 sha224_transform \
-			sha512 sha512_transform
+FILES	=	main error md5  utils dispatcher md5_transorm md5_helpers \
+			md5_round_logic print
 SRC		=	$(FILES:%=src/%.c)
 OBJ		=	$(SRC:%.c=%.o)
 
@@ -23,8 +22,8 @@ cleandebug:
 
 clean:
 	@echo "Removing Object Files..."
-	@make -C libft/ clean
 	@/bin/rm -f $(OBJ)
+	@make -C libft/ clean
 
 fclean: cleandebug clean
 	@echo "Removing $(NAME)..."

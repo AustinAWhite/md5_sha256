@@ -35,14 +35,12 @@ static void		get_neg(int *n, int *neg)
 
 char			*ft_itoa(int n)
 {
-	int		ncpy;
 	int		len;
 	int		neg;
 	char	*str;
 
 	if (n == -2147483648)
 		return (ft_strdup("-2147483648"));
-	ncpy = n;
 	len = get_len(n);
 	get_neg(&n, &neg);
 	len += neg;

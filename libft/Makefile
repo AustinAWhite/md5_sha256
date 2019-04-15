@@ -24,7 +24,7 @@ all : $(NAME)
 
 $(NAME):
 	@echo "Compiling $(NAME)..."
-	@gcc -c $(CFLAGS) $(SRC) -I $(HEADER) \
+	@gcc -c $(CFLAGS) $(SRC) \
 	&& ar rc libft.a $(OBJ) && ranlib $(NAME)
 
 debug:

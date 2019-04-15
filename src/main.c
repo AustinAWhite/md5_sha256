@@ -1,6 +1,21 @@
 #include "../inc/ssl.h"
 #include "../inc/dispatch.h"
 
+static unsigned int g_flag_list[] = {
+	FLG_P, FLG_Q, FLG_R, FLG_S,
+};
+
+void (*g_dispatch_funcs[])(char *input, int cmd_idx, u_int8_t type) = {
+	&md5,
+	//&sha256,
+};
+
+const char	*g_dispatch_lookup[] = {
+	"md5",
+	//"sha256",
+	(char *)NULL,
+};
+
 char	*read_stdin(void)
 {
 	int		ret;
@@ -34,7 +49,7 @@ int		handle_opts(t_container *d, char *arg, char *next_arg, int *argi)
 		if (toggle && (*d).flags & FLG_P)
 		{
 			toggle = 0;
-			dispatcher(read_stdin(), (*d).cmd_idx, (*d).flags | IS_STR | FS);
+			dispatcher(read_stdin(), (*d).cmd_idx, (*d).flags | IS_STR | P_APPEND);
 		}
 		if ((*d).flags & FLG_S)
 		{
@@ -72,6 +87,6 @@ int		main(int ac, char **av)
 		dispatcher(av[i++], d.cmd_idx, d.flags | IS_FILE);
 	}
 	if (do_stdin && !(d.flags & FLG_P) && !(d.flags & FLG_S))
-		dispatcher(read_stdin(), d.cmd_idx, d.flags | IS_STR | FS);
+		dispatcher(read_stdin(), d.cmd_idx, d.flags | IS_STR | P_APPEND);
 	return (0);
 }

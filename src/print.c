@@ -3,7 +3,7 @@
 
 void	print2_damnnorm(int cmd_idx, char *input, u_int8_t info)
 {
-	if (!(info & FLG_Q) && !(info & FLG_R) && !(info & FS))
+	if (!(info & FLG_Q) && !(info & FLG_R) && !(info & P_APPEND))
 	{
 		if (info & IS_STR)
 		{
@@ -28,7 +28,7 @@ void	print_hash(char *input, u_int8_t info,
 	unsigned int i;
 
 	i = -1;
-	if (info & FLG_P && info & FS)
+	if (info & FLG_P && info & P_APPEND)
 		ft_putstr(input);
 	while (++i < size)
 	{
@@ -36,7 +36,7 @@ void	print_hash(char *input, u_int8_t info,
 			ft_putchar('0');
 		ft_putstr(ft_itoa_base(hash[i], 16));
 	}
-	if (info & FLG_R && !(info & FS) && !(info & FLG_Q))
+	if (info & FLG_R && !(info & P_APPEND) && !(info & FLG_Q))
 	{
 		if (info & IS_STR)
 		{

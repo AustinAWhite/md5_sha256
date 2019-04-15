@@ -1,13 +1,13 @@
 #include "../inc/ssl.h"
 #include "../inc/dispatch.h"
 
-void	dispatcher(char *input, int cmd_idx, u_int8_t type)
+void	dispatcher(char *input, int cmd_idx, u_int8_t info)
 {
 	struct stat fstat;
 
-	if (type & IS_STR)
-		g_dispatch_funcs[cmd_idx](input, cmd_idx, type);
-	else if (type & IS_FILE)
+	if (info & IS_STR)
+		g_dispatch_funcs[cmd_idx](input, cmd_idx, info);
+	else if (info & IS_FILE)
 	{
 		if (access(input, F_OK) != -1)
 		{
@@ -16,7 +16,7 @@ void	dispatcher(char *input, int cmd_idx, u_int8_t type)
 				file_error(g_dispatch_lookup[cmd_idx], input,
 										"Is a directory");
 			else
-				g_dispatch_funcs[cmd_idx](input, cmd_idx, type);
+				g_dispatch_funcs[cmd_idx](input, cmd_idx, info);
 		}
 		else
 			file_error(g_dispatch_lookup[cmd_idx], input,
