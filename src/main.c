@@ -7,12 +7,12 @@ static unsigned int g_flag_list[] = {
 
 void (*g_dispatch_funcs[])(char *input, u_int8_t type) = {
 	&md5,
-	//&sha256,
+	&sha256,
 };
 
 const char	*g_dispatch_lookup[] = {
 	"md5",
-	//"sha256",
+	"sha256",
 	(char *)NULL,
 };
 
