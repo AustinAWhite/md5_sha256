@@ -32,7 +32,7 @@ void print_hash(char* command, char *input,
     if ((info & FLG_P) && (info & P_APPEND))
         ft_putstr(input);
     for (unsigned int i = 0; i < size; i++) {
-        if (hash[i] < 0xF)
+        if (hash[i] <= 0xF)
             ft_putchar('0');       
         ft_putstr(ft_itoa_base(hash[i], 16));
     }

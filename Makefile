@@ -1,4 +1,4 @@
-NAME	=	ft_ssl
+NAME	=	mySSL
 CFLAGS	=	-Wall -Werror -Wextra
 FILES	=	main error md5 sha256 utils dispatcher
 SRC		=	$(FILES:%=src/%.c)
