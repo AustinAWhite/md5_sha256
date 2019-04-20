@@ -1,5 +1,5 @@
 # mySSL
-Purely an intellectual persuit in an attempt to understand how common crpytographic hashing functions work
+Purely an intellectual pursuit in an attempt to understand how common crpytographic hashing functions operate
 
 
 ### Installing
