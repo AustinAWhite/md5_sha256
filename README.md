@@ -27,3 +27,5 @@ an executable 'mySSL' will be created
 * q, quiet mode
 * r, reverse the format of the output
 * s, print the sum of the given string
+
+![Alt text](demo.png)
