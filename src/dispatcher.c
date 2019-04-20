@@ -1,25 +1,24 @@
 #include "../inc/ssl.h"
 #include "../inc/dispatch.h"
 
-void	dispatcher(char *input, int cmd_idx, u_int8_t info)
-{
+void dispatcher(char *input, int cmd_idx, u_int8_t info){
 	struct stat fstat;
 
-	if (info & IS_STR)
+	if (info & IS_STR) {
 		g_dispatch_funcs[cmd_idx](input, info);
-	else if (info & IS_FILE)
-	{
-		if (access(input, F_OK) != -1)
-		{
+	}
+	else if (info & IS_FILE) {
+		if (access(input, F_OK) != -1) {
 			stat(input, &fstat);
-			if (S_ISDIR(fstat.st_mode))
+			if (S_ISDIR(fstat.st_mode)) {
 				file_error(g_dispatch_lookup[cmd_idx], input,
 										"Is a directory");
-			else
+			} else {
 				g_dispatch_funcs[cmd_idx](input, info);
-		}
-		else
+			}
+		} else {
 			file_error(g_dispatch_lookup[cmd_idx], input,
 										"No such file or directory");
+		}
 	}
 }

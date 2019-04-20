@@ -32,7 +32,7 @@ enum sha256_buf_init {
 	sha256_h1 = (u_int32_t)0xbb67ae85,
 	sha256_h2 = (u_int32_t)0x3c6ef372,
 	sha256_h3 = (u_int32_t)0xa54ff53a,
-    sha256_h4 = (u_int32_t)0x510e527f,
+	sha256_h4 = (u_int32_t)0x510e527f,
 	sha256_h5 = (u_int32_t)0x9b05688c,
 	sha256_h6 = (u_int32_t)0x1f83d9ab,
 	sha256_h7 = (u_int32_t)0x5be0cd19

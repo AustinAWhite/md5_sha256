@@ -20,8 +20,7 @@ const u_int32_t sha256_k[64] = {
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-static void init_buf_state(sha256_ctx *ctx, const void *message, size_t len)
-{
+static void init_buf_state(sha256_ctx *ctx, const void *message, size_t len) {
 	ctx->state[0] = sha256_h0;
 	ctx->state[1] = sha256_h1;
 	ctx->state[2] = sha256_h2;
@@ -37,8 +36,7 @@ static void init_buf_state(sha256_ctx *ctx, const void *message, size_t len)
 	ctx->complete = 0;
 }
 
-static int calc_chunk(u_int8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
-{
+static int calc_chunk(u_int8_t buffer[CHUNK_SIZE], sha256_ctx *ctx) {
 	size_t space_left;
 	size_t left;
 	u_int32_t len;
@@ -74,14 +72,13 @@ static int calc_chunk(u_int8_t buffer[CHUNK_SIZE], sha256_ctx *ctx)
 			len >>= 8;
 		}
 		ctx->complete = 1;
-	}
-	else
+	} else {
 		memset(buffer, 0x00, space_left);
+	}
 	return 1;
 }
 
-void sha_transform(sha256_ctx *ctx, u_int8_t hash[32])
-{
+void sha_transform(sha256_ctx *ctx, u_int8_t hash[32]) {
 	int i, j;
 	sha256_vars vars;
 	u_int32_t w_bufs[8];
@@ -119,8 +116,9 @@ void sha_transform(sha256_ctx *ctx, u_int8_t hash[32])
 			w_bufs[1] = w_bufs[0];
 			w_bufs[0] = vars.temp1 + vars.temp2;
 		}
-		for (i = 0; i < 8; i++)
+		for (i = 0; i < 8; i++) {
 			ctx->state[i] += w_bufs[i];
+		}
 	}
 	for (i = 0, j = 0; i < 8; i++) {
         hash[j++] = (uint8_t) (ctx->state[i] >> 24);
@@ -130,18 +128,19 @@ void sha_transform(sha256_ctx *ctx, u_int8_t hash[32])
     }
 }	
 
-void sha256(char *input, u_int8_t info)
-{
+void sha256(char *input, u_int8_t info) {
 	sha256_ctx ctx;
     u_int8_t hash[32];
 	char *message;
 	unsigned int len;
 
-    if (info & IS_STR)
+    if (info & IS_STR) {
         message = input;
-    else
-        if ((message = readfile(input)) == NULL)
+	} else {
+        if ((message = readfile(input)) == NULL) {
             return;
+		}
+	}
     len = ft_strlen(message);
 	init_buf_state(&ctx, message, len);
     sha_transform(&ctx, hash);

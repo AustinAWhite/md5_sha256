@@ -4,11 +4,11 @@
 #define SET(n) (*(u_int32_t *)&ptr[(n) * 4])
 #define GET(n) SET(n)
 
-#define F(x, y, z)		((z) ^ ((x) & ((y) ^ (z))))
-#define G(x, y, z)		((y) ^ ((z) & ((x) ^ (y))))
-#define H(x, y, z)		(((x) ^ (y)) ^ (z))
-#define H2(x, y, z)		((x) ^ ((y) ^ (z)))
-#define I(x, y, z)		((y) ^ ((x) | ~(z)))
+#define F(x, y, z) ((z) ^ ((x) & ((y) ^ (z))))
+#define G(x, y, z) ((y) ^ ((z) & ((x) ^ (y))))
+#define H(x, y, z) (((x) ^ (y)) ^ (z))
+#define H2(x, y, z) ((x) ^ ((y) ^ (z)))
+#define I(x, y, z) ((y) ^ ((x) | ~(z)))
 
 #define STEP(f, a, b, c, d, x, t, s) \
 	(a) += f((b), (c), (d)) + (x) + (t); \
@@ -52,18 +52,16 @@ void md5_init_ctx(md5_ctx *ctx)
 }
 
 static const void *md5_transform(md5_ctx *ctx,
-									const void *data,
-									unsigned long size)
-{
+					const void *data, unsigned long size) {
 	const unsigned char *ptr;
 	u_int32_t A;
-    u_int32_t B;
-    u_int32_t C;
-    u_int32_t D;
+	u_int32_t B;
+	u_int32_t C;
+	u_int32_t D;
 	u_int32_t saved_A;
-    u_int32_t saved_B;
-    u_int32_t saved_C;
-    u_int32_t saved_D;
+	u_int32_t saved_B;
+	u_int32_t saved_C;
+	u_int32_t saved_D;
 	
 	ptr = (const unsigned char *)data;
 	A = ctx->state[0];
@@ -144,7 +142,7 @@ static const void *md5_transform(md5_ctx *ctx,
 		STEP(I, C, D, A, B, GET( 2), md5_k[62], S43)
 		STEP(I, B, C, D, A, GET( 9), md5_k[63], S44)
 		
-        A += saved_A;
+		A += saved_A;
 		B += saved_B;
 		C += saved_C;
 		D += saved_D;
@@ -158,15 +156,15 @@ static const void *md5_transform(md5_ctx *ctx,
 	return (ptr);
 }
 
-void md5_update(md5_ctx *ctx, const void *message, unsigned long size)
-{
+void md5_update(md5_ctx *ctx, const void *message, unsigned long size) {
 	u_int32_t saved_lo;
 	unsigned long used;
-    unsigned long available;
+	unsigned long available;
 
 	saved_lo = ctx->count[0];
-	if ((ctx->count[0] = (saved_lo + size) & 0x1fffffff) < saved_lo)
+	if ((ctx->count[0] = (saved_lo + size) & 0x1fffffff) < saved_lo) {
 		ctx->count[1]++;
+	}
 	ctx->count[1] += size >> 29;
 	used = saved_lo & 0x3f;
 	if (used) {
@@ -188,10 +186,9 @@ void md5_update(md5_ctx *ctx, const void *message, unsigned long size)
 	memcpy(ctx->buffer, message, size);
 }
 
-void md5_final(unsigned char *digest, md5_ctx *ctx)
-{
+void md5_final(unsigned char *digest, md5_ctx *ctx) {
 	unsigned long used;
-    unsigned long available;
+	unsigned long available;
 
 	used = ctx->count[0] & 0x3f;
 	ctx->buffer[used++] = 0x80;
@@ -214,21 +211,23 @@ void md5_final(unsigned char *digest, md5_ctx *ctx)
 	memset(ctx, 0, sizeof(*ctx));
 }
 
-void md5(char *input, u_int8_t info)
-{
-    md5_ctx ctx;
+void md5(char *input, u_int8_t info) {
+	md5_ctx ctx;
 	u_int8_t digest[16];
-    char *message;
+	char *message;
 	unsigned int len;
 
-	if (info & IS_STR)
+	if (info & IS_STR) {
 		message = input;
-	else if (info & IS_FILE)
-		if ((message = readfile(input)) == NULL)
+	}
+	else if (info & IS_FILE) {
+		if ((message = readfile(input)) == NULL) {
 			return ;
-    len = ft_strlen(message);
+		}
+	}
+	len = ft_strlen(message);
 	md5_init_ctx(&ctx);
 	md5_update(&ctx, message, len);
 	md5_final(digest, &ctx);
-    print_hash("MD5", input, digest, 16, info);
+	print_hash("MD5", input, digest, 16, info);
 }

@@ -3,10 +3,10 @@
 
 # include <inttypes.h>
 
-typedef struct	s_container
+typedef struct s_container
 {
-	int			cmd_idx;
-	u_int8_t	flags;
-}				t_container;
+	int cmd_idx;
+	u_int8_t flags;
+} t_container;
 
 #endif

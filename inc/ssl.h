@@ -18,18 +18,17 @@
 # define READ_BUF_SIZE 4096
 # define READ_FILE_SIZE 4096
 
-void			print_usage();
-void			file_error(const char *cmd, char *input, char *err);
-void			error_cmd(char *cmd);
-void			arg_required(char c);
-void			invalid_flag(char invalid);
+void print_usage();
+void file_error(const char *cmd, char *input, char *err);
+void error_cmd(char *cmd);
+void arg_required(char c);
+void invalid_flag(char invalid);
 
-void			dispatcher(char *input, int cmd_idx, u_int8_t type);
+void dispatcher(char *input, int cmd_idx, u_int8_t type);
 
-char			*readfile(char *path);
-void 			print_hash(char* command, char *input,
-					unsigned char hash[],
+char *readfile(char *path);
+void print_hash(char* command, char *input, unsigned char hash[],
 					unsigned int size, uint8_t info);
-int				count_commands();
+int count_commands();
 
 #endif
