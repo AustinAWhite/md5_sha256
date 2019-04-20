@@ -1,7 +1,7 @@
 #include "../inc/ssl.h"
 #include "../inc/dispatch.h"
 
-int		count_commands(void) {
+int	count_commands(void) {
 	int count;
 
 	count = 0;
