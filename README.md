@@ -1,4 +1,4 @@
-# mySSL
+# sha256 and md5 implementation
 Purely an intellectual pursuit in an attempt to understand how common crpytographic hashing functions operate
 
 
